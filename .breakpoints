@@ -1,0 +1,28 @@
+{
+  "files": {
+    "contacts/views.py": [
+      {
+        "id": "aee32a93-1a24-480c-9307-e44b89ed28da",
+        "line": 11,
+        "version": 1,
+        "index": 294
+      }
+    ],
+    "frontend/src/containers/Login.js": [
+      {
+        "id": "f0b29e91-26ae-454c-9aa2-b71005bcb849",
+        "line": 1,
+        "version": 7,
+        "index": 0
+      }
+    ],
+    "sklad_uchastok/views.py": [
+      {
+        "id": "0cee8866-8c64-4231-a6d3-92f0f8a69f9c",
+        "line": 17,
+        "version": 867,
+        "index": 618
+      }
+    ]
+  }
+}

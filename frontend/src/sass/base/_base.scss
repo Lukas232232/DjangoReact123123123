@@ -1,0 +1,54 @@
+*,
+*::after,
+*::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+}
+
+html {
+    font-size: 100%;
+
+    @include respond(tab-land) {
+        font-size: 90%;
+    }
+
+    @include respond(tab-port) {
+        font-size: 80%;
+    }
+
+    @include respond(phone) {
+        font-size: 60%;
+    }
+}
+
+body {
+    box-sizing: border-box;
+    font-family: bebas-neue, sans-serif;
+
+    @include respond(tab-port) {
+        padding: 0;
+    }
+}
+
+::selection {
+    background-color: rgba($color-primary, 0.3);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between; /* размещает элементы по краям родительского элемента */
+    align-items: center; /* выравнивает элементы по центру вертикально */
+
+    > h1 {
+        text-align: center; /* размещает текст внутри h1 по центру */
+        flex: 1; /* расширяет h1 по ширине, чтобы он занял все доступное пространство */
+    }
+
+    > button {
+        margin-right: auto; /* прижимает span справа к родительскому контейнеру */
+    }
+}
+
+
+
