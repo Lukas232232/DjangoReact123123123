@@ -46,14 +46,3 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
-
-    def clean_name(self):
-        if self.name == "Slava":
-            message = {'name': ["Ваше имя не Слава!!!"]}
-            message['name'].append('Ну и еще что то')
-            raise ValidationError(message)
-        return self.name
-
-    def clean(self):
-        self.clean_name()
-        return True

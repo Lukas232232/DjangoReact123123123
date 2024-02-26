@@ -247,6 +247,7 @@ async function getPosts({ token }) {
 				// Данные не соответствуют ожидаемой структуре
 				throw new Response("Некорректный формат данных", { status: response.status });
 			}
+			console.log(data)
 			// Возвращение данных, если все проверки пройдены успешно
 			return data;
 		} else {

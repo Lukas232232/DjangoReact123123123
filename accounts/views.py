@@ -30,7 +30,7 @@ class LoginView(APIView):
             if user is not None:
                 refresh_token = RefreshToken.for_user(user)
                 access_token = refresh_token.access_token
-                # получаем токен объект что бы дость из него id пользоватя и передать в Response
+                # получаем токен объект что бы достать из него id пользоватя и передать в Response
                 token_obj = AccessToken(str(access_token))
                 user_id = token_obj.payload[
                     'user_id']  # Извлекаем id из токена
@@ -100,7 +100,6 @@ class SignupView(APIView):
         try:
             User = get_user_model()
             user = User(name=name, email=email, password=password)
-            print(user.clean())
             if password == password2:
                 if User.objects.filter(email=email).exists():
                     return Response({'error': 'Email already exists'})
