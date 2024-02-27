@@ -37,7 +37,6 @@ class Uchastok_all_View(APIView):
     def addVerboseName(self, model):
         # Добавляем поле Verbose_name как словарь где ключ это имя поля
         fields = model._meta.get_fields()
-        print(fields)
         # Сбор verbose_name каждого поля в список
         verbose_names = [{
             field.name: field.verbose_name
