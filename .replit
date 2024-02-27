@@ -7,6 +7,7 @@ entrypoint = "manage.py"
 # A list of globs that specify which files and directories should
 # be hidden in the workspace.
 hidden = ["venv", ".config", "**/__pycache__", "**/.mypy_cache", "**/*.pyc"]
+modules = ["nodejs-20:v8-20230920-bd784b9"]
 
 # Specifies which nix channel to use when building the environment.
 [nix]

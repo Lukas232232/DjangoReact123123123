@@ -128,8 +128,7 @@ export default function HomePage(props) {
 			// 		<span>{rowData.birthCity === 'İstanbul' ? 'Стамбул' : rowData.birthCity}</span>
 			//   ),
 			editComponent: (props) => {
-				console.log(selectedBirthCity);
-
+				console.log(selectedBirthCity)
 				return (
 					<Autocomplete
 						css={css`
