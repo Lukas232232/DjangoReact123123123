@@ -1,4 +1,4 @@
-asgiref @ file:///home/runner/.cache/pypoetry/artifacts/44/47/8b/eeb8b3236803e39b50f24aec1dd7dc622a47aedd27d0c37ba347271f9b/asgiref-3.5.1-py3-none-any.whl
+asgiref==3.7.2
 backports.entry-points-selectable==1.1.1
 CacheControl==0.12.10
 cachy==0.3.0
@@ -12,7 +12,9 @@ cryptography==35.0.0
 debugpy==1.2.1
 distlib==0.3.3
 Django @ file:///home/runner/.cache/pypoetry/artifacts/0a/6e/a7/ad9b81885c41d7edd5f5fd91479a9c6be684b7ad660172f6b1f93c7d42/Django-3.2.13-py3-none-any.whl
+django-cors-headers==4.3.1
 djangorestframework==3.14.0
+djangorestframework-simplejwt==5.3.1
 docopt==0.6.2
 filelock==3.3.2
 future==0.18.2
@@ -29,6 +31,7 @@ packaging==20.9
 parso==0.5.2
 pastel==0.2.1
 pexpect==4.8.0
+Pillow==10.1.0
 pipreqs-amasad==0.4.10
 pkginfo==1.7.1
 platformdirs==2.4.0
@@ -38,6 +41,7 @@ poetry-core==1.0.7
 ptyprocess==0.7.0
 pycparser==2.21
 pyflakes==2.1.1
+PyJWT==2.8.0
 pylev==1.4.0
 pyparsing==3.0.5
 python-jsonrpc-server==0.3.2
@@ -52,7 +56,7 @@ six==1.16.0
 sqlparse @ file:///home/runner/.cache/pypoetry/artifacts/5c/57/47/582e6c575570333d1c84c495489bc30ed2c7e0fccaabeaa29650cfc543/sqlparse-0.4.2-py3-none-any.whl
 toml==0.10.2
 tomlkit==0.7.2
-typing-extensions==3.7.4.3
+typing-extensions==4.9.0
 ujson==1.35
 urllib3==1.26.7
 virtualenv==20.10.0

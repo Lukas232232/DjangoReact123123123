@@ -117,44 +117,45 @@ export default function HomePage(props) {
 	// настриваем колонки
 	const [columns, setColumns] = useState([
 		{ title: "ID", field: "id", hidden: false },
-		{ title: "Имя", field: "name" },
-		{ title: "Фамилия", field: "surname", initialEditValue: "" },
-		{ title: "Год рождения", field: "birthYear", type: "numeric" },
-		{
-			title: "Место рождения",
-			field: "birthCity",
-			lookup: { 34: "İstanbul", 63: "Şanlıurfa" }, // lookup - это объект, в котором ключи - это значения поля, а значения выподятся пользователю
-			// render: (rowData) => (
-			// 		<span>{rowData.birthCity === 'İstanbul' ? 'Стамбул' : rowData.birthCity}</span>
-			//   ),
-			editComponent: (props) => {
-				console.log(selectedBirthCity)
-				return (
-					<Autocomplete
-						css={css`
-							padding-bottom: 14px;
-						`}
-						{...defaultProps}
-						id="disable-close-on-select"
-						disableCloseOnSelect={false}
-						value={
-							defaultProps.options.find((option) => {
-								console.log(props.rowData.birthCity);
-								return option.id === props.rowData.birthCity;
-							}) || null
-						}
-						onChange={(e, v) => {
-							// Обработчик изменения выбранного значения
-							handleBirthCityChange(e, v);
-							props.onChange(v ? v.id : null);
-						}}
-						renderInput={(params) => (
-							<TextField {...params} label="Место рождения" variant="standard" />
-						)}
-					/>
-				);
-			},
-		},
+		{ title: "Рудник/Склад", field: "rudnik" },
+		{ title: "Реальная дата", field: "real_date", initialEditValue: "" },
+		{ title: "Дата", field: "my_date", type: "numeric" },
+		{ title: "Дата", field: "my_date", type: "numeric" },
+		// {
+		// 	title: "Место рождения",
+		// 	field: "birthCity",
+		// 	lookup: { 34: "İstanbul", 63: "Şanlıurfa" }, // lookup - это объект, в котором ключи - это значения поля, а значения выподятся пользователю
+		// 	// render: (rowData) => (
+		// 	// 		<span>{rowData.birthCity === 'İstanbul' ? 'Стамбул' : rowData.birthCity}</span>
+		// 	//   ),
+		// 	editComponent: (props) => {
+		// 		console.log(selectedBirthCity)
+		// 		return (
+		// 			<Autocomplete
+		// 				css={css`
+		// 					padding-bottom: 14px;
+		// 				`}
+		// 				{...defaultProps}
+		// 				id="disable-close-on-select"
+		// 				disableCloseOnSelect={false}
+		// 				value={
+		// 					defaultProps.options.find((option) => {
+		// 						console.log(props.rowData.birthCity);
+		// 						return option.id === props.rowData.birthCity;
+		// 					}) || null
+		// 				}
+		// 				onChange={(e, v) => {
+		// 					// Обработчик изменения выбранного значения
+		// 					handleBirthCityChange(e, v);
+		// 					props.onChange(v ? v.id : null);
+		// 				}}
+		// 				renderInput={(params) => (
+		// 					<TextField {...params} label="Место рождения" variant="standard" />
+		// 				)}
+		// 			/>
+		// 		);
+		// 	},
+		// },
 	]);
 
 	const [data, setData] = useState([
