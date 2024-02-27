@@ -58,24 +58,32 @@ class DvishenieMTR(models.Model):
     rudnik = models.ForeignKey(Sklad,
                                on_delete=models.DO_NOTHING,
                                verbose_name="Рудник/Склад")
-    real_date = models.DateTimeField(auto_now_add=True)
-    my_date = models.DateField()
+    real_date = models.DateTimeField(auto_now_add=True,
+                                     verbose_name="Реальная дата")
+    my_date = models.DateField(verbose_name="Дата")
     enc = models.ForeignKey(SpravochnikOborudovaniya,
-                            on_delete=models.DO_NOTHING)
+                            on_delete=models.DO_NOTHING,
+                            verbose_name="ЕНС")
     type_dvisheniya = models.CharField(max_length=50,
                                        choices=TYPE_DVISHEN,
                                        verbose_name="Тип движения")
-    count = models.IntegerField()
-    itog_count = models.IntegerField(null=True, blank=True)
+    count = models.IntegerField(default=0, verbose_name="Количество")
+    itog_count = models.IntegerField(null=True,
+                                     blank=True,
+                                     verbose_name="Вычисляемое количество")
     istochnik = models.ForeignKey(Istochnik,
                                   on_delete=models.DO_NOTHING,
                                   verbose_name="Источник")
-    type_rabot = models.ForeignKey(Type_rabot, on_delete=models.DO_NOTHING)
+    type_rabot = models.ForeignKey(Type_rabot,
+                                   on_delete=models.DO_NOTHING,
+                                   verbose_name="Тип работ")
     sdo = models.CharField(max_length=100, verbose_name="№ СДО/оборудования")
     nomer_incidenta = models.CharField(max_length=50,
                                        verbose_name="№ INC/RITM")
-    comment = models.TextField(blank=True)
-    user = models.ForeignKey(UserAccount, on_delete=models.DO_NOTHING)
+    comment = models.TextField(blank=True, verbose_name="Комментарий")
+    user = models.ForeignKey(UserAccount,
+                             on_delete=models.DO_NOTHING,
+                             verbose_name="Пользователь")
 
     def clean_count(self):
         if self.count <= 0:
@@ -86,7 +94,7 @@ class DvishenieMTR(models.Model):
     def clean_itog_count(self):
         if self.type_dvisheniya == 'Приход' and isinstance(self.count, int):
             self.itog_count = self.count
-        else:
+        elif self.count is not None and isinstance(self.count, int):
             self.itog_count = self.count * (-1)
 
     def clean(self):
@@ -99,4 +107,4 @@ class DvishenieMTR(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.enc
+        return self.enc.name

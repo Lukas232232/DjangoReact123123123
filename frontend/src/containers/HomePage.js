@@ -95,7 +95,7 @@ const containerMy = css`
 
 export default function HomePage(props) {
 	const { query } = useLoaderData();
-	const { allDvishenie } = query;
+	const { allDvishenie, rudnik, istochnik, type_rabot, verbose_name } = query;
 
 	const defaultProps = {
 		options: [

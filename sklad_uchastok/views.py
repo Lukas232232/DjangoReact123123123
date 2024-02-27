@@ -7,7 +7,7 @@ from django.core.serializers import serialize
 from django.core.exceptions import ValidationError
 from rest_framework import status
 from .serializers import *
-from .models import DvishenieMTR
+from .models import *
 
 
 class Uchastok_all_View(APIView):
@@ -17,6 +17,7 @@ class Uchastok_all_View(APIView):
     def get(self, request, *args, **kwargs):
         uchastoksMTR = DvishenieMTR.objects.all()
         allDvishenie = Uchastok_all_serializer(uchastoksMTR, many=True)
+        verbose_name = self.addVerboseName(DvishenieMTR)
         rudnik = Sklad.objects.all()
         rudnik = Sklad_serialize(rudnik, many=True)
         istochnik = Istochnik.objects.all()
@@ -29,5 +30,16 @@ class Uchastok_all_View(APIView):
                 "rudnik": rudnik.data,
                 "istochnik": istochnik.data,
                 "type_rabot": type_rabot.data,
+                "verbose_name": verbose_name,
             },
             status=200)
+
+    def addVerboseName(self, model):
+        # Добавляем поле Verbose_name как словарь где ключ это имя поля
+        fields = model._meta.get_fields()
+        print(fields)
+        # Сбор verbose_name каждого поля в список
+        verbose_names = [{
+            field.name: field.verbose_name
+        } for field in fields if hasattr(field, 'verbose_name')]
+        return verbose_names
