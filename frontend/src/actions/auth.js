@@ -57,7 +57,7 @@ const login = createAsyncThunk(
 		try {
 			console.log(email, password);
 			const response = await fetch(
-				`https://c75b361c-d4a8-4f3c-ba6c-626f8832b861-00-150peigvtqdi5.kirk.replit.dev/api/accounts/auth`,
+				`/api/accounts/auth`,
 				{
 					method: "POST",
 					headers: {
