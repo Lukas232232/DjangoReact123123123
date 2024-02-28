@@ -34,11 +34,11 @@ class SpravochnikOborudovaniya_serializer(serializers.ModelSerializer):
 
 
 class Uchastok_all_serializer(serializers.ModelSerializer):
-    rudnik = Sklad_serialize()
-    istochnik = Istochnik_serialize()
-    type_rabot = Type_rabot_serialize()
-    user = UserAccount_serializer()
-    enc = SpravochnikOborudovaniya_serializer()
+    # rudnik = Sklad_serialize()
+    # istochnik = Istochnik_serialize()
+    # type_rabot = Type_rabot_serialize()
+    # user = UserAccount_serializer()
+    # enc = SpravochnikOborudovaniya_serializer()
 
     class Meta:
         model = DvishenieMTR
