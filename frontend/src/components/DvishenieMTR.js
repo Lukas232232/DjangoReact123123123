@@ -8,11 +8,14 @@ import MaterialTable from "@material-table/core";
 
 import EditForm_DvishenieMTR from "./EditForm_DvishenieMTR";
 import EditIcon from '@mui/icons-material/Edit';
-import RemoveIcon from '@mui/icons-material/Remove';
+import AutoDeleteIcon from '@mui/icons-material/AutoDelete';
+
+
+
 export default function DvishenieMTR(props) {
     // Содержит все данные из loader запроса
     const query = useAsyncValue()
-    const {allDvishenie, rudnik, istochnik, type_rabot, verbose_name} = query;
+    const {allDvishenie, rudnik, istochnik, type_rabot, enc, user , verbose_name} = query;
     // Данные для Списков с автозаполеннием
     const defaultProps = {
         options: [
@@ -23,7 +26,14 @@ export default function DvishenieMTR(props) {
     };
     // открывает диалоговое окно для редактирование записи
     const [_openEditDialog, _openEditDialogSet] = useState(false);
+    const [dummy, setDummy] = useState(0) // для возвожности когда происходит такое присваение в state значения как и было
 
+    // метод удаления записи
+    const handleDelete = async (rowdata)=>{
+    console.log("")
+}
+
+    // lookup полей
     const [rudnikLookup, setRudnikLookup] = useState(() => {
         const data = {}
         rudnik.map((one) => {
@@ -31,30 +41,59 @@ export default function DvishenieMTR(props) {
         })
         return data; // Возвращаем результат вычислений
     });
-    console.log(rudnikLookup)
-    // настриваем колонки
+    const [encLookup, setEncLookup] = useState(() => {
+        const data = {}
+        enc.map((one) => {
+            data[one.id] = one.name
+        })
+        return data; // Возвращаем результат вычислений
+    });
+    const [istochnikLookup, setIstochnikLookup] = useState(() => {
+        const data = {}
+        istochnik.map((one) => {
+            data[one.id] = one.name
+        })
+        return data; // Возвращаем результат вычислений
+    });
+    const [type_rabotLookup, setType_rabotLookup] = useState(() => {
+        const data = {}
+        type_rabot.map((one) => {
+            data[one.id] = one.name
+        })
+        return data; // Возвращаем результат вычислений
+    });
+    const [userLookup, setUserLookup] = useState(() => {
+        const data = {}
+        user.map((one) => {
+            data[one.id] = one.name
+        })
+        return data; // Возвращаем результат вычислений
+    });
+    const handleEdit = (e, rowData) => {
+        _openEditDialogSet(true)
+        setDummy(prevDummy => prevDummy + 1);
+    }
+
     const [columns, setColumns] = useState([
         {title: "ID", field: "id", hidden: false},
         {
             title: "Рудник/Склад", field: "rudnik", lookup: rudnikLookup
         },
         {
-            title: "Реальная дата", field: "real_date", initialEditValue: "", render: rowData => {
-                const date = new Date(rowData.real_date);
-                const day = date.getDate().toString().padStart(2, '0');    // Получаем день, делаем двухзначный
-                const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Получаем месяц (начиная с 0), делаем двухзначный
-                const year = date.getFullYear();                            // Получаем год
-                const formattedDate = `${day}.${month}.${year}`; // Собираем форматированную строку даты
-                // Форматирование времени
-                const hours = date.getHours().toString().padStart(2, '0');  // Получаем часы, делаем двухзначный
-                const minutes = date.getMinutes().toString().padStart(2, '0'); // Получаем минуты, делаем двухзначный
-                const seconds = date.getSeconds().toString().padStart(2, '0'); // Получаем секунды, делаем двухзначный
-
-                const formattedTime = `${hours}:${minutes}:${seconds}`;
-                return `${formattedDate} ${formattedTime}`;
-            }
+            title: "Реальная дата", type: "datetime", field: "real_date", initialEditValue: "___",
         },
-        {title: "Дата", field: "my_date", type: "numeric"},
+        {title: "Дата", field: "my_date", type: "date"},
+        {title: "ЕНС", field: "enc", type: "numeric", lookup: encLookup},
+        {title: "Тип движение", field: "type_dvisheniya", type: "string"},
+        {title: "Количество", field: "count", type: "numeric"},
+        {title: "Итоговое кол-во", field: "itog_count", type: "numeric"},
+        {title: "Источник", field: "istochnik", type: "numeric", lookup: istochnikLookup},
+        {title: "Тип работ", field: "type_rabot", type: "numeric", lookup: type_rabotLookup},
+        {title: "СДО/оборудование", field: "sdo", type: "string"},
+        {title: "INC|RITM", field: "nomer_incidenta", type: "string"},
+        {title: "Комментарий", field: "comment", type: "string"},
+        {title: "Пользователь", field: "user", type: "numeric", lookup: userLookup},
+
         // {
         // 	title: "Место рождения",
         // 	field: "birthCity",
@@ -94,8 +133,9 @@ export default function DvishenieMTR(props) {
 
 
     const containerMy = css`
-      padding-left: 26px;
+      padding-left: 0px;
     `;
+
     return (
         <Grid container spacing={3}>
             <Grid item xs={12} align="center">
@@ -106,12 +146,12 @@ export default function DvishenieMTR(props) {
                     data={allDvishenie}
                     actions={[
                         {
-                            icon: () => <EditIcon fontSize="default" color="primary" />,
+                            icon: () => <EditIcon fontSize="default" color="primary"/>,
                             tooltip: 'Редактировать',
-                            onClick: (event, rowData) => handleEdit(rowData)
+                            onClick: (event, rowData) => handleEdit(event, rowData)
                         },
                         {
-                            icon: () => <RemoveIcon fontSize="default" color="primary" />,
+                            icon: () => <AutoDeleteIcon fontSize="default" color="primary"/>,
                             tooltip: 'Удалить',
                             onClick: (event, rowData) => {
                                 if (window.confirm('Вы уверены, что хотите удалить эту строку?')) handleDelete(rowData);
@@ -152,7 +192,7 @@ export default function DvishenieMTR(props) {
                 />
             </Grid>
             <Grid item xs={12} align="center">
-                <EditForm_DvishenieMTR _open={_openEditDialog}/>
+                <EditForm_DvishenieMTR _open={_openEditDialog} dummy={dummy}/>
             </Grid>
         </Grid>
     )

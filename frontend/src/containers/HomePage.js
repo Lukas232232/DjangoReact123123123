@@ -56,8 +56,9 @@ class HomePage1 extends Component {
 
 export default function HomePage(props) {
     const {query} = useLoaderData();
+
     const containerMy = css`
-      padding-left: 26px;
+      padding-left: 0px;
     `;
     return (
         <Grid css={containerMy} container spacing={3}>

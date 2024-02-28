@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError
 from rest_framework import status
 from .serializers import *
 from .models import *
-
+from accounts.models import UserAccount
 
 class Uchastok_all_View(APIView):
     serializer_class = Uchastok_all_serializer
@@ -24,12 +24,18 @@ class Uchastok_all_View(APIView):
         istochnik = Istochnik_serialize(istochnik, many=True)
         type_rabot = Type_rabot.objects.all()
         type_rabot = Type_rabot_serialize(type_rabot, many=True)
+        user = UserAccount.objects.all()
+        user = UserAccount_serializer(user, many=True)
+        spravochnikOborudovanya = SpravochnikOborudovaniya.objects.all()
+        spravochnikOborudovanya = SpravochnikOborudovaniya_serializer(spravochnikOborudovanya, many=True)
         return Response(
             {
                 "allDvishenie": allDvishenie.data,
                 "rudnik": rudnik.data,
                 "istochnik": istochnik.data,
                 "type_rabot": type_rabot.data,
+                "enc": spravochnikOborudovanya.data,
+                "user": user.data,
                 "verbose_name": verbose_name,
             },
             status=200)

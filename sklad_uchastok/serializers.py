@@ -32,7 +32,6 @@ class SpravochnikOborudovaniya_serializer(serializers.ModelSerializer):
         model = SpravochnikOborudovaniya
         fields = "__all__"
 
-
 class Uchastok_all_serializer(serializers.ModelSerializer):
     # rudnik = Sklad_serialize()
     # istochnik = Istochnik_serialize()

@@ -38,8 +38,6 @@ import store from '../store'
 import { AuthProvider } from '../hoc/AuthProvider'
 import { RequireAuth } from '../hoc/RequireAuth'
 
-
-
 export default function App(props) {
 	const router = createBrowserRouter(
 		createRoutesFromElements(

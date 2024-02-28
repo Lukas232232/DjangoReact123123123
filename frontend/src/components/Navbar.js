@@ -101,6 +101,7 @@ const vertMenu = css`
 	padding-left: 50px;
 	.Mui-selected {
 		background-color: #05c1fa;
+		font-size: 13px;
 		color: white !important;
 	}
 	.Mui-selected .MuiTab-root {
@@ -110,11 +111,13 @@ const vertMenu = css`
 
 const verMenuItem = css`
 	color: #fff;
-	font-size: 16px;
+	font-size: 13px;
 	font-weight: 500;
 	
 `;
 // Основаная функция компонента
+
+
 export default function Navbar(props) {
 	const cookieValue = Cookies.get("access_token");
 	console.log(cookieValue);
