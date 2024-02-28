@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 
 // импорт scss стилей
@@ -49,7 +49,7 @@ export default function App(props) {
 					<Route path='/createRoom' element={<h1>привет</h1>} />
 				</Route>
 				<Route path='/new' element={<NewMain/>}>
-					<Route index element={<HomePage {...props} testNew="дадада" />} loader={getFetchAllLoader} errorElement={<ErrorPage/>}/>
+					<Route index element={<Suspense fallback={<div>Загрузка</div>}><HomePage {...props} testNew="дадада" /></Suspense>} loader={getFetchAllLoader} errorElement={<ErrorPage/>}/>
 					<Route path='/new/createRoom' element={<h1>привет</h1>} />
 
 					<Route path='/new/About' element={<RequireAuth {...props}><About /></RequireAuth>} />

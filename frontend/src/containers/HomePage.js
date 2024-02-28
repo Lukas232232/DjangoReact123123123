@@ -1,16 +1,7 @@
 /** @format */
-import React, {Component, Suspense, useState} from "react";
+import React, {Component, Suspense} from "react";
 import {Button, ButtonGroup, Grid,} from "@mui/material";
-import {
-    Await,
-    defer,
-    Link,
-    useLoaderData,
-    useNavigate,
-    useNavigation,
-    useParams,
-    useSearchParams,
-} from "react-router-dom";
+import {Await, defer, Link, useLoaderData,} from "react-router-dom";
 
 import store from "../store";
 import {AuthContext} from "../hoc/AuthProvider";
@@ -18,7 +9,7 @@ import {AuthContext} from "../hoc/AuthProvider";
 import ListingForm from "../components/ListingForm";
 
 import {css} from "@emotion/react";
-import MaterialTable from "@material-table/core";
+import DvishenieMTR from "../components/DvishenieMTR"
 import axios from "axios";
 
 class HomePage1 extends Component {
@@ -62,142 +53,22 @@ class HomePage1 extends Component {
     }
 }
 
-const containerMy = css`
-  padding-left: 26px;
-`;
 
 export default function HomePage(props) {
     const {query} = useLoaderData();
-    const {allDvishenie, rudnik, istochnik, type_rabot, verbose_name} = query;
-
-    const defaultProps = {
-        options: [
-            {id: 34, title: "İstanbul"},
-            {id: 63, title: "Şanlıurfa"},
-        ],
-        getOptionLabel: (option) => option.title,
-    };
-
-    const [selectedBirthCity, setSelectedBirthCity] = useState(null);
-
-    const handleBirthCityChange = (event, value) => {
-        // Вы должны обновить значение props.rowData.birthCity с помощью обработчика onChange
-        // Например:
-
-        setSelectedBirthCity(value ? value.title : null);
-        console.log(selectedBirthCity, 123);
-    };
-    // настриваем колонки
-    const [columns, setColumns] = useState([
-        {title: "ID", field: "id", hidden: false},
-        {title: "Рудник/Склад", field: "rudnik"},
-        {title: "Реальная дата", field: "real_date", initialEditValue: ""},
-        {title: "Дата", field: "my_date", type: "numeric"},
-        {title: "Дата", field: "my_date", type: "numeric"},
-        // {
-        // 	title: "Место рождения",
-        // 	field: "birthCity",
-        // 	lookup: { 34: "İstanbul", 63: "Şanlıurfa" }, // lookup - это объект, в котором ключи - это значения поля, а значения выподятся пользователю
-        // 	// render: (rowData) => (
-        // 	// 		<span>{rowData.birthCity === 'İstanbul' ? 'Стамбул' : rowData.birthCity}</span>
-        // 	//   ),
-        // 	editComponent: (props) => {
-        // 		console.log(selectedBirthCity)
-        // 		return (
-        // 			<Autocomplete
-        // 				css={css`
-        // 					padding-bottom: 14px;
-        // 				`}
-        // 				{...defaultProps}
-        // 				id="disable-close-on-select"
-        // 				disableCloseOnSelect={false}
-        // 				value={
-        // 					defaultProps.options.find((option) => {
-        // 						console.log(props.rowData.birthCity);
-        // 						return option.id === props.rowData.birthCity;
-        // 					}) || null
-        // 				}
-        // 				onChange={(e, v) => {
-        // 					// Обработчик изменения выбранного значения
-        // 					handleBirthCityChange(e, v);
-        // 					props.onChange(v ? v.id : null);
-        // 				}}
-        // 				renderInput={(params) => (
-        // 					<TextField {...params} label="Место рождения" variant="standard" />
-        // 				)}
-        // 			/>
-        // 		);
-        // 	},
-        // },
-    ]);
-
-    const [data, setData] = useState([
-        {id: 1, name: "Mehmet", surname: "Baran", birthYear: 1987, birthCity: 34},
-        {id: 2, name: "Zerya Betül", surname: "Baran", birthYear: 2017, birthCity: 63},
-    ]);
-
-    // поиск Get запросов
-    const [searchParams, setSearchParams] = useSearchParams();
-    // получить параметры внутренних запросов
-    const params = useParams();
-    const navigate = useNavigate();
-    const navigation = useNavigation();
-
+    const containerMy = css`
+      padding-left: 26px;
+    `;
     return (
         <Grid css={containerMy} container spacing={3}>
             <Grid item xs={12} align="center">
-                {" "}
-                <div>{selectedBirthCity || "Пусто"}</div>
                 <Suspense fallback={<h2>Loading...</h2>}>
                     <Await resolve={query}>
                         {(resolvedPosts) => (
-                            <p>{resolvedPosts.allDvishenie.map((post) => post.id).join("---")}</p>
+                            <DvishenieMTR/>
                         )}
                     </Await>
                 </Suspense>
-                <MaterialTable
-                    options={{addRowPosition: "first"}}
-                    title="Editable Preview"
-                    columns={columns}
-                    data={data}
-                    editable={{
-                        onRowAdd: (newData) =>
-                            new Promise((resolve, reject) => {
-                                setTimeout(() => {
-                                    const newDataArray = [...data, newData]; // Создаем новый массив с новой строкой в начале
-                                    setData(newDataArray);
-
-                                    resolve();
-                                }, 1000);
-                            }),
-                        onRowUpdate: (newData, oldData) =>
-                            new Promise((resolve, reject) => {
-                                setTimeout(() => {
-                                    const dataUpdate = [...data];
-                                    const index = dataUpdate.findIndex((item) => item.id === oldData.id);
-                                    console.log(newData);
-                                    dataUpdate[index] = newData;
-                                    setData([...dataUpdate]);
-
-                                    resolve();
-                                }, 1000);
-                            }),
-                        onRowDelete: (oldData) =>
-                            new Promise((resolve, reject) => {
-                                setTimeout(() => {
-                                    const dataDelete = [...data];
-                                    const index = dataDelete.findIndex((item) => item.id === oldData.id);
-                                    dataDelete.splice(index, 1);
-                                    setData([...dataDelete]);
-
-                                    resolve();
-                                }, 1000);
-                            }),
-                    }}
-                />
-            </Grid>
-            <Grid item xs={12} align="center">
-                <ListingForm/>
             </Grid>
         </Grid>
     );
@@ -220,7 +91,6 @@ async function getPosts({token}) {
                 // Данные не соответствуют ожидаемой структуре
                 throw new Response("Некорректный формат данных", {status: response.status});
             }
-            console.log(data)
             // Возвращение данных, если все проверки пройдены успешно
             return data;
         } else {
