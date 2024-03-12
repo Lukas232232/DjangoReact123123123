@@ -6,52 +6,11 @@ import {Await, defer, Link, useLoaderData,} from "react-router-dom";
 import store from "../store";
 import {AuthContext} from "../hoc/AuthProvider";
 
-import ListingForm from "../components/EditForm_DvishenieMTR";
+
 
 import {css} from "@emotion/react";
 import DvishenieMTR from "../components/DvishenieMTR"
 import axios from "axios";
-
-class HomePage1 extends Component {
-    static contextType = AuthContext;
-
-    constructor(props) {
-        super(props);
-        console.log(this.props.testNew);
-    }
-
-    componentDidUpdate(prevProps) {
-    }
-
-    async componentDidMount() {
-        this.fetch_user_room_code();
-    }
-
-    fetch_user_room_code() {
-    }
-
-    render() {
-        console.log(this.context);
-        return (
-            <Grid container spacing={3}>
-                <Grid item xs={12} align="center">
-                    <ButtonGroup disableElevation variant="contained" color="secondary">
-                        <Button color="primary" to="/join" component={Link}>
-                            Join a Room
-                        </Button>
-                        <Button color="secondary" to="/createRoom" component={Link}>
-                            Create a Room123
-                        </Button>
-                    </ButtonGroup>
-                </Grid>
-                <Grid item xs={12} align="center">
-                    <ListingForm/>
-                    fdsfasfdsf
-                </Grid>
-            </Grid>
-        );
-    }
-}
 
 
 export default function HomePage(props) {

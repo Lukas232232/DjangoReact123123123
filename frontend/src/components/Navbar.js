@@ -225,6 +225,8 @@ export default function Navbar(props) {
 					</IconButton>
 				</DrawerHeader>
 				<Divider />
+				<h3 style={{paddingRight: "15px", textAlign:'center'}}>Склад</h3>
+				<Divider />
 				<List>
 					{["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
 						<ListItem key={text} disablePadding>
@@ -235,6 +237,8 @@ export default function Navbar(props) {
 						</ListItem>
 					))}
 				</List>
+				<Divider />
+				<h3 style={{paddingRight: "15px", textAlign:'center'}}>Модулья закупок</h3>
 				<Divider />
 				<List>
 					{["All mail", "Trash", "Spam"].map((text, index) => (
