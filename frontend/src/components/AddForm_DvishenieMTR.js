@@ -8,12 +8,12 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import {Autocomplete, Stack} from "@mui/material";
 import {css} from "@emotion/react";
-import {useAsyncValue} from "react-router-dom";
+import {useAsyncValue, useNavigate} from "react-router-dom";
+
+import {useCreateDvishMTR} from "../hook/useReactQuery";
 
 import * as Yup from 'yup'
 import {useFormik} from 'formik';
-
-import {useQuery} from 'react-query'
 
 const initialValues = {
     rudnik: '',
@@ -26,6 +26,7 @@ const initialValues = {
     nomer_incidenta: '',
     sdo: '',
     user: '',
+    comment: '',
 }
 
 
@@ -43,20 +44,50 @@ const validationSchema = Yup.object({
 
 
 export default function FormDialog({_open, dummy}) {
+    const navigate = useNavigate()
+    const onSuccess = (data) => {
+        console.log("Запрос выполенен")
+        const currentPath = window.location.pathname;
+        navigate(currentPath, {replace: true});
+        formik.resetForm()
+    }
+
+    const {mutate: addItemDvishMTR, isError, error, isLoading, isSuccess} = useCreateDvishMTR({onSuccess: onSuccess})
+
+
     const [disableIstochnik, setDisableIstochnik] = useState(false)
-    const onSubmit = values => {
-        console.log("Данные для отправки:", values)
+    const onSubmit = (values, {setFieldError}) => {
+        const newArr = {}
+        Object.entries(values).forEach(([key, value], index) => {
+            if (typeof value === "object" && value.hasOwnProperty("label")) {
+                newArr[key] = value.id
+            } else {
+                newArr[key] = value
+            }
+
+        });
+        addItemDvishMTR(newArr)
     }
 
     const formik = useFormik({
         initialValues, onSubmit, validationSchema
     });
 
+    // ЕСЛИ ВСЕ ХОРОШО И ПРИШЕЛ ПОЛОЖИТЕЛЬНЫЙ ОТВЕТ С СЕРВЕРА очищаем ФОРМУ
 
+    // вносим ошибки с сервера в поля для отоборбарженияы
+    useEffect(() => {
+        const errorServer = isError ? error.response.data.errors : null
+        const newErrors = {}
+        if (errorServer) {
+            Object.entries(errorServer).forEach(([key, value]) => {
+                newErrors[key] = value[0];
+            });
+            formik.setErrors(newErrors)
+        }
 
-    const onSubmitTest = values => {
-        formik.setFieldError('rudnik', "Вот моя ошибка")
-    }
+    }, [isError])
+    console.log(formik.errors)
 
     const data = useAsyncValue()
     const [open, setOpen] = useState(_open || false);
@@ -194,6 +225,7 @@ export default function FormDialog({_open, dummy}) {
                         disablePortal
                         value={formik.values.enc}
                         options={list['enc']}
+
                         onBlur={formik.handleBlur}
                         onChange={(event, newValue) => {
                             // Обновляем поле rudnik в state формы, используя метод setFieldValue
@@ -218,11 +250,11 @@ export default function FormDialog({_open, dummy}) {
                         onChange={(event, newValue) => {
                             // Обновляем поле rudnik в state формы, используя метод setFieldValue
                             formik.setFieldValue("type_dvisheniya", newValue);
-                            if (newValue?.label === "Расход"){
+                            if (newValue?.label === "Расход") {
                                 let newIstochnik = list.istochnik.find(key => key.label === "Участковый склад");
                                 formik.setFieldValue("istochnik", newIstochnik);
                                 setDisableIstochnik(true)
-                            }else {
+                            } else {
                                 formik.setFieldValue("istochnik", null);
                                 setDisableIstochnik(false)
                             }
@@ -313,7 +345,7 @@ export default function FormDialog({_open, dummy}) {
                     <TextField
                         css={inputLabelStyles}
                         id="comment"
-                        name={'comment'}
+                        name='comment'
                         label="Комментарий"
                         multiline
                         rows={4}
@@ -327,9 +359,8 @@ export default function FormDialog({_open, dummy}) {
                 </Stack>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onSubmitTest}>test</Button>
                 <Button onClick={handleClose}>Закрыть</Button>
-                <Button type="submit">Сохранить</Button>
+                <Button disabled={!formik.isValid || !formik.dirty} type="submit">Сохранить</Button>
             </DialogActions>
         </Dialog>
     </React.Fragment>);

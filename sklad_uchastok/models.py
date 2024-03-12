@@ -1,4 +1,3 @@
-from django.core.exceptions import ValidationError
 from django.db import models
 
 from accounts.models import UserAccount
@@ -78,15 +77,14 @@ class DvishenieMTR(models.Model):
     type_rabot = models.ForeignKey(Type_rabot,
                                    on_delete=models.DO_NOTHING,
                                    verbose_name="Тип работ")
-    sdo = models.CharField(max_length=100, verbose_name="№ СДО/оборудования")
-    nomer_incidenta = models.CharField(max_length=50,
+    sdo = models.CharField(max_length=100, null=True, blank=True, verbose_name="№ СДО/оборудования")
+    nomer_incidenta = models.CharField(max_length=50, null=True, blank=True,
                                        verbose_name="№ INC/RITM")
-    comment = models.TextField(blank=True, verbose_name="Комментарий")
+    comment = models.TextField(blank=True, null=True, verbose_name="Комментарий")
     user = models.ForeignKey(UserAccount,
+                             null=True, blank=True,
                              on_delete=models.DO_NOTHING,
                              verbose_name="Пользователь")
-
-
 
     def __str__(self):
         return self.enc.name

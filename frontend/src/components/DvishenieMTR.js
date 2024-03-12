@@ -6,7 +6,7 @@ import {useAsyncValue,} from "react-router-dom";
 import {css} from "@emotion/react";
 import MaterialTable from "@material-table/core";
 
-import EditForm_DvishenieMTR from "./AddForm_DvishenieMTR";
+import AddForm_DvishenieMTR from "./AddForm_DvishenieMTR";
 import EditIcon from '@mui/icons-material/Edit';
 import AutoDeleteIcon from '@mui/icons-material/AutoDelete';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
@@ -15,14 +15,6 @@ export default function DvishenieMTR(props) {
     // Содержит все данные из loader запроса
     const query = useAsyncValue()
     const {allDvishenie, rudnik, istochnik, type_rabot, enc, user, verbose_name} = query;
-    // Данные для Списков с автозаполеннием
-    const defaultProps = {
-        options: [
-            {id: 34, title: "İstanbul"},
-            {id: 63, title: "Şanlıurfa"},
-        ],
-        getOptionLabel: (option) => option.title,
-    };
     // открывает диалоговое окно для редактирование записи
     const [_openEditDialog, _openEditDialogSet] = useState(false);
     const [dummy, setDummy] = useState(0) // для возвожности когда происходит такое присваение в state значения как и было
@@ -31,7 +23,12 @@ export default function DvishenieMTR(props) {
     const handleDelete = async (rowdata) => {
         console.log("")
     }
+    const handleAdd = (e, rowData) => {
+        _openEditDialogSet(true)
+        setDummy(prevDummy => prevDummy + 1);
+    }
 
+    const [allDvish, setAllDvish] = useState(allDvishenie)
     // lookup полей
     const [rudnikLookup, setRudnikLookup] = useState(() => {
         const data = {}
@@ -68,10 +65,6 @@ export default function DvishenieMTR(props) {
         })
         return data; // Возвращаем результат вычислений
     });
-    const handleEdit = (e, rowData) => {
-        _openEditDialogSet(true)
-        setDummy(prevDummy => prevDummy + 1);
-    }
 
     const [columns, setColumns] = useState([
         {title: "ID", field: "id", hidden: false},
@@ -130,7 +123,6 @@ export default function DvishenieMTR(props) {
         // },
     ]);
 
-
     const containerMy = css`
       padding-left: 0px;
     `;
@@ -146,14 +138,14 @@ export default function DvishenieMTR(props) {
                     actions={[
                         {
                             icon: () => <ControlPointIcon fontSize="large" color="primary"/>,
-                            tooltip: 'Моя пользовательская операция',
+                            tooltip: 'Добавить запись',
                             isFreeAction: true,
-                            onClick: (event, rowData) => handleEdit(event, rowData),
+                            onClick: (event, rowData) => handleAdd(event, rowData),
                         },
                         {
                             icon: () => <EditIcon fontSize="default" color="primary"/>,
                             tooltip: 'Редактировать',
-                            onClick: (event, rowData) => handleEdit(event, rowData)
+                            onClick: (event, rowData) => handleAdd(event, rowData)
                         },
                         {
                             icon: () => <AutoDeleteIcon fontSize="default" color="primary"/>,
@@ -197,7 +189,7 @@ export default function DvishenieMTR(props) {
                 />
             </Grid>
             <Grid item xs={12} align="center">
-                <EditForm_DvishenieMTR _open={_openEditDialog} dummy={dummy}/>
+                <AddForm_DvishenieMTR _open={_openEditDialog} dummy={dummy}/>
             </Grid>
         </Grid>
     )

@@ -1,12 +1,9 @@
 # ну вот так
 from rest_framework import permissions
 # from datetime import datetime, timezone, timedelta
-from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from accounts.models import UserAccount
-from .models import *
 from .serializers import *
 
 
@@ -52,14 +49,20 @@ class Uchastok_all_View(APIView):
 
 class Uchastok_create_View(APIView):
     serializer_class = Uchastok_all_serializer
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
+        mutable_data = request.data.copy()  # Создаем изменяемую копию request.data
+        mutable_data['user'] = request.user.id  # Теперь мы можем добавить/изменить данные
+        print(mutable_data)
+        serializer = self.serializer_class(data=mutable_data)
         if serializer.is_valid():
+            pass
             data = serializer.save()
-            serializer2 = self.serializer_class(data)
-            return Response({'success': serializer2.data}, status=201)
+            serializer_new = self.serializer_class(data)
+            return Response({'success': serializer_new.data}, status=201)
         else:
+            pass
             # ошибки сериализации передаем в ответ
             return Response({"errors": serializer.errors}, status=400)
+        return Response({"ok": "ok"})
