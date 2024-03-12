@@ -1,3 +1,4 @@
+# ну вот так
 from rest_framework import permissions
 # from datetime import datetime, timezone, timedelta
 from rest_framework import status
