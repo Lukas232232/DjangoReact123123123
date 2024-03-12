@@ -1,18 +1,17 @@
+from rest_framework import permissions
+# from datetime import datetime, timezone, timedelta
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView, RetrieveAPIView
-from rest_framework import permissions
-#from datetime import datetime, timezone, timedelta
-from django.core.serializers import serialize
-from django.core.exceptions import ValidationError
-from rest_framework import status
-from .serializers import *
-from .models import *
+
 from accounts.models import UserAccount
+from .models import *
+from .serializers import *
+
 
 class Uchastok_all_View(APIView):
     serializer_class = Uchastok_all_serializer
-    permission_classes = (permissions.IsAuthenticated, )
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
         uchastoksMTR = DvishenieMTR.objects.all()
@@ -48,3 +47,18 @@ class Uchastok_all_View(APIView):
             field.name: field.verbose_name
         } for field in fields if hasattr(field, 'verbose_name')]
         return verbose_names
+
+
+class Uchastok_create_View(APIView):
+    serializer_class = Uchastok_all_serializer
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            data = serializer.save()
+            serializer2 = self.serializer_class(data)
+            return Response({'success': serializer2.data}, status=201)
+        else:
+            # ошибки сериализации передаем в ответ
+            return Response({"errors": serializer.errors}, status=400)

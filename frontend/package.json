@@ -48,18 +48,21 @@
     "@reduxjs/toolkit": "^2.0.1",
     "@remix-run/router": "^1.13.0",
     "axios": "^1.6.2",
+    "formik": "^2.4.5",
     "js-cookie": "^3.0.5",
     "material-react-table": "^2.11.2",
     "material-table": "^2.0.5",
     "node-sass": "^9.0.0",
     "react-auth-kit": "^3.0.0-alpha.44",
+    "react-query": "^3.39.3",
     "react-redux": "^9.0.4",
     "react-router": "^6.21.0",
     "react-router-dom": "^6.21.0",
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^3.1.0",
     "universal-cookie": "^7.0.2",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "yup": "^1.4.0"
   },
   "description": ""
 }

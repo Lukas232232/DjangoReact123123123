@@ -6,16 +6,15 @@ import {useAsyncValue,} from "react-router-dom";
 import {css} from "@emotion/react";
 import MaterialTable from "@material-table/core";
 
-import EditForm_DvishenieMTR from "./EditForm_DvishenieMTR";
+import EditForm_DvishenieMTR from "./AddForm_DvishenieMTR";
 import EditIcon from '@mui/icons-material/Edit';
 import AutoDeleteIcon from '@mui/icons-material/AutoDelete';
-
-
+import ControlPointIcon from '@mui/icons-material/ControlPoint';
 
 export default function DvishenieMTR(props) {
     // Содержит все данные из loader запроса
     const query = useAsyncValue()
-    const {allDvishenie, rudnik, istochnik, type_rabot, enc, user , verbose_name} = query;
+    const {allDvishenie, rudnik, istochnik, type_rabot, enc, user, verbose_name} = query;
     // Данные для Списков с автозаполеннием
     const defaultProps = {
         options: [
@@ -29,9 +28,9 @@ export default function DvishenieMTR(props) {
     const [dummy, setDummy] = useState(0) // для возвожности когда происходит такое присваение в state значения как и было
 
     // метод удаления записи
-    const handleDelete = async (rowdata)=>{
-    console.log("")
-}
+    const handleDelete = async (rowdata) => {
+        console.log("")
+    }
 
     // lookup полей
     const [rudnikLookup, setRudnikLookup] = useState(() => {
@@ -146,6 +145,12 @@ export default function DvishenieMTR(props) {
                     data={allDvishenie}
                     actions={[
                         {
+                            icon: () => <ControlPointIcon fontSize="large" color="primary"/>,
+                            tooltip: 'Моя пользовательская операция',
+                            isFreeAction: true,
+                            onClick: (event, rowData) => handleEdit(event, rowData),
+                        },
+                        {
                             icon: () => <EditIcon fontSize="default" color="primary"/>,
                             tooltip: 'Редактировать',
                             onClick: (event, rowData) => handleEdit(event, rowData)
@@ -167,27 +172,27 @@ export default function DvishenieMTR(props) {
                     //                 resolve();
                     //             }, 1000);
                     //         }),
-                    //     onRowUpdate: (newData, oldData) =>
-                    //         new Promise((resolve, reject) => {
-                    //             setTimeout(() => {
-                    //                 const dataUpdate = [...data];
-                    //                 const index = dataUpdate.findIndex((item) => item.id === oldData.id);
-                    //                 console.log(newData);
-                    //                 dataUpdate[index] = newData;
-                    //                 setData([...dataUpdate]);
-                    //                 resolve();
-                    //             }, 1000);
-                    //         }),
-                    //     onRowDelete: (oldData) =>
-                    //         new Promise((resolve, reject) => {
-                    //             setTimeout(() => {
-                    //                 const dataDelete = [...data];
-                    //                 const index = dataDelete.findIndex((item) => item.id === oldData.id);
-                    //                 dataDelete.splice(index, 1);
-                    //                 setData([...dataDelete]);
-                    //                 resolve();
-                    //             }, 1000);
-                    //         }),
+                    //     // onRowUpdate: (newData, oldData) =>
+                    //     //     new Promise((resolve, reject) => {
+                    //     //         setTimeout(() => {
+                    //     //             const dataUpdate = [...data];
+                    //     //             const index = dataUpdate.findIndex((item) => item.id === oldData.id);
+                    //     //             console.log(newData);
+                    //     //             dataUpdate[index] = newData;
+                    //     //             setData([...dataUpdate]);
+                    //     //             resolve();
+                    //     //         }, 1000);
+                    //     //     }),
+                    //     // onRowDelete: (oldData) =>
+                    //     //     new Promise((resolve, reject) => {
+                    //     //         setTimeout(() => {
+                    //     //             const dataDelete = [...data];
+                    //     //             const index = dataDelete.findIndex((item) => item.id === oldData.id);
+                    //     //             dataDelete.splice(index, 1);
+                    //     //             setData([...dataDelete]);
+                    //     //             resolve();
+                    //     //         }, 1000);
+                    //     //     }),
                     // }}
                 />
             </Grid>

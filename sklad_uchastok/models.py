@@ -1,6 +1,7 @@
-from django.db import models
-from accounts.models import UserAccount
 from django.core.exceptions import ValidationError
+from django.db import models
+
+from accounts.models import UserAccount
 
 
 class SpravochnikOborudovaniya(models.Model):
@@ -85,26 +86,7 @@ class DvishenieMTR(models.Model):
                              on_delete=models.DO_NOTHING,
                              verbose_name="Пользователь")
 
-    def clean_count(self):
-        if self.count <= 0:
-            raise ValidationError(
-                "Поле Количество - Необходимо ввести число больше 0")
-        return self.count
 
-    def clean_itog_count(self):
-        if self.type_dvisheniya == 'Приход' and isinstance(self.count, int):
-            self.itog_count = self.count
-        elif self.count is not None and isinstance(self.count, int):
-            self.itog_count = self.count * (-1)
-
-    def clean(self):
-        self.clean_itog_count()
-        self.clean_count()
-
-    def save(self, *args, **kwargs):
-        self.full_clean(
-        )  # Запускаем метод full_clean() для проведения валидации всех полей
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.enc.name
