@@ -9,11 +9,19 @@ from .serializers import *
 
 class Uchastok_all_View(APIView):
     serializer_class = Uchastok_all_serializer
-    permission_classes = (permissions.IsAuthenticated,)
+    #permission_classes = (permissions.IsAuthenticated,)
 
-    def get(self, request, *args, **kwargs):
-        uchastoksMTR = DvishenieMTR.objects.all()
-        allDvishenie = Uchastok_all_serializer(uchastoksMTR, many=True)
+    def get(self, request, pk=None):
+        if pk:
+            uchastoksMTR = DvishenieMTR.objects.filter(pk=pk)
+            if not uchastoksMTR:
+                return Response(
+                    {'error': "Данной записи не найдено"},
+                    status=404)
+            allDvishenie = Uchastok_all_serializer(uchastoksMTR, many=True)
+        else:
+            uchastoksMTR = DvishenieMTR.objects.all()
+            allDvishenie = Uchastok_all_serializer(uchastoksMTR, many=True)
         verbose_name = self.addVerboseName(DvishenieMTR)
         rudnik = Sklad.objects.all()
         rudnik = Sklad_serialize(rudnik, many=True)
@@ -21,8 +29,9 @@ class Uchastok_all_View(APIView):
         istochnik = Istochnik_serialize(istochnik, many=True)
         type_rabot = Type_rabot.objects.all()
         type_rabot = Type_rabot_serialize(type_rabot, many=True)
-        user = UserAccount.objects.all()
+        user = UserAccount.objects.filter(pk=request.user.id)
         user = UserAccount_serializer(user, many=True)
+        print(user.data)
         spravochnikOborudovanya = SpravochnikOborudovaniya.objects.all()
         spravochnikOborudovanya = SpravochnikOborudovaniya_serializer(spravochnikOborudovanya, many=True)
         return Response(
@@ -62,7 +71,33 @@ class Uchastok_create_View(APIView):
             serializer_new = self.serializer_class(data)
             return Response({'success': serializer_new.data}, status=201)
         else:
-            pass
             # ошибки сериализации передаем в ответ
             return Response({"errors": serializer.errors}, status=400)
         return Response({"ok": "ok"})
+
+    def delete(self, request, pk, format=None):
+        itemDelete = DvishenieMTR.objects.filter(pk=pk).first()
+        if itemDelete:
+            itemDelete.delete()
+            # статус 204 не предпологает возврата ответа (не как 200 или 404)
+            return Response(status=204)
+        else:
+            return Response({"error": "error"}, status=404)
+
+    def patch(self, request, pk):
+        item = DvishenieMTR.objects.filter(pk=pk).first()
+        # print(request.data)
+        # if item:
+        #     return Response({"success": "ok"}, status=203)
+        # else:
+        #     return Response({"error": "Указанного pk не существует"}, status=404)
+
+        if item:
+            serializer = self.serializer_class(item, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=203)
+            else:
+                return Response({"errors": serializer.errors}, status=400)
+        else:
+            return Response({"error": "Указанного pk не существует"}, status=404)

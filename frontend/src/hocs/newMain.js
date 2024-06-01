@@ -43,7 +43,6 @@ import Cookies from 'js-cookie';
 
 
 export default function NewMain(props) {
-    const outl = Outlet
     return (
         <Navbar {...props} outletMy={<Outlet/>}/>
 

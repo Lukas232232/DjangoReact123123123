@@ -24,29 +24,30 @@ import store from '../store'
 import {AuthProvider} from '../hoc/AuthProvider'
 import {RequireAuth} from '../hoc/RequireAuth'
 import {QueryClient, QueryClientProvider} from "react-query";
+import CenterSklad from "./CenterSklad";
+// Импортируйте основные стили DevExtreme
+import 'devextreme/dist/css/dx.material.teal.light.css'; // Или другая тема по вашему выбору
+import 'devextreme/dist/css/dx.common.css';
 
 const queryClient = new QueryClient()
+
 export default function App(props) {
     const router = createBrowserRouter(
         createRoutesFromElements(
             <>
-                <Route path='/' element={<Main/>}>
-                    <Route index element={<HomePage {...props} testNew={<test_1/>}/>}/>
-                    <Route path='/createRoom' element={<h1>привет</h1>}/>
-                </Route>
-                <Route path='/new' element={<NewMain/>}>
-                    <Route index element={<Suspense fallback={<div>Загрузка</div>}><HomePage {...props}
-                                                                                             testNew="дадада"/></Suspense>}
+                <Route path='/' element={<NewMain/>}>
+                    <Route index element={<HomePage {...props} testNew="дадада"/>}
                            loader={getFetchAllLoader} errorElement={<ErrorPage/>}/>
-                    <Route path='/new/createRoom' element={<h1>привет</h1>}/>
-
-                    <Route path='/new/About' element={<RequireAuth {...props}><About/></RequireAuth>}/>
-
-                    <Route path='/new/Contact' element={<Contact/>}/>
-                    <Route path='/new/ListingDetail' element={<ListingDetail/>}/>
-                    <Route path='/new/Listings' element={<Listings/>}/>
-                    <Route path='/new/Login' element={<Login/>}/>
-                    <Route path='/new/SignUp' element={<SignUp/>}/>
+                    <Route path='/skladUchastok' element={<RequireAuth {...props}>
+                        <HomePage {...props} testNew="дадада"/></RequireAuth>}
+                           loader={getFetchAllLoader} errorElement={<ErrorPage/>}/>
+                    <Route path='/About' element={<RequireAuth {...props}><About/></RequireAuth>}/>
+                    <Route path='/Contact' element={<Contact/>}/>
+                    <Route path='/ListingDetail' element={<ListingDetail/>}/>
+                    <Route path='/Listings' element={<Listings/>}/>
+                    <Route path='/Login' element={<Login/>}/>
+                    <Route path='/SignUp' element={<SignUp/>}/>
+                    <Route path='/centerSklad' element={<CenterSklad/>}/>
                 </Route>
             </>
         ),

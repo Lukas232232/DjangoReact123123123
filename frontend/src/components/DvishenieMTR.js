@@ -1,32 +1,77 @@
 /** @format */
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Grid,} from "@mui/material";
-import {useAsyncValue,} from "react-router-dom";
+import {useAsyncValue, useLocation, useNavigate, useSearchParams,} from "react-router-dom";
 
 import {css} from "@emotion/react";
 import MaterialTable from "@material-table/core";
 
 import AddForm_DvishenieMTR from "./AddForm_DvishenieMTR";
+import EditForm_DvishenieMTR from "./EditForm_DvishenieMTR";
 import EditIcon from '@mui/icons-material/Edit';
 import AutoDeleteIcon from '@mui/icons-material/AutoDelete';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 
+import {useDeleteDvishMTR} from "../hook/useReactQuery"
+import {useLeftMenu} from "../store/storeZustand";
+
 export default function DvishenieMTR(props) {
+    // устанавливаем себе левое меню
+    const leftMenu = useLeftMenu((state) => (state.setMenu))
+    useEffect(() => {
+        leftMenu([
+            {
+                name: "Склад",
+                item: [
+                    {nameItem: "Menu-1", url: "/edit/rer/erer"},
+                    {nameItem: "Menu-2", url: "/edit/rer/erer"}
+                ],
+            }
+        ]);
+    }, [leftMenu]);
+    const navigate = useNavigate()
+    const location = useLocation()
+    const [searchParams, setSearchParams] = useSearchParams();
+    // метод для удаление записи движения мтр
+    const {mutate: DeleteDvishMTR, isError, error, isLoading, isSuccess} = useDeleteDvishMTR({
+        onSuccess: () => {
+            const currentPath = window.location.pathname;
+            navigate(currentPath, {replace: true});
+        },
+    })
     // Содержит все данные из loader запроса
     const query = useAsyncValue()
     const {allDvishenie, rudnik, istochnik, type_rabot, enc, user, verbose_name} = query;
     // открывает диалоговое окно для редактирование записи
+    const [_openDialog, _openDialogSet] = useState(false);
     const [_openEditDialog, _openEditDialogSet] = useState(false);
     const [dummy, setDummy] = useState(0) // для возвожности когда происходит такое присваение в state значения как и было
 
     // метод удаления записи
-    const handleDelete = async (rowdata) => {
-        console.log("")
+    const handleDelete = (rowdata) => {
+        DeleteDvishMTR(rowdata.id)
+        if (isSuccess) {
+            console.log("Все ок!")
+        }
     }
+    // кнопка добавление записи
     const handleAdd = (e, rowData) => {
+        _openDialogSet(true)
+        setDummy(prevDummy => prevDummy + 1);
+    }
+    // кнопка изменения записи
+    const handleEdit = (e, rowData) => {
+        setSearchParams({module: "dvisheniemtr", edit: rowData.id})
         _openEditDialogSet(true)
         setDummy(prevDummy => prevDummy + 1);
     }
+    // обрабатываем событие изменения get параметров в строке запроса
+    useEffect(() => {
+        if (searchParams.get("module") === "dvisheniemtr" && searchParams.get('edit') !== undefined) {
+            _openEditDialogSet(true)
+            setDummy(prevDummy => prevDummy + 1);
+        }
+    }, [searchParams])
 
     const [allDvish, setAllDvish] = useState(allDvishenie)
     // lookup полей
@@ -124,9 +169,8 @@ export default function DvishenieMTR(props) {
     ]);
 
     const containerMy = css`
-      padding-left: 0px;
-    `;
-
+        padding-left: 0px;
+    `
     return (
         <Grid container spacing={3}>
             <Grid item xs={12} align="center">
@@ -145,7 +189,7 @@ export default function DvishenieMTR(props) {
                         {
                             icon: () => <EditIcon fontSize="default" color="primary"/>,
                             tooltip: 'Редактировать',
-                            onClick: (event, rowData) => handleAdd(event, rowData)
+                            onClick: (event, rowData) => handleEdit(event, rowData)
                         },
                         {
                             icon: () => <AutoDeleteIcon fontSize="default" color="primary"/>,
@@ -189,7 +233,10 @@ export default function DvishenieMTR(props) {
                 />
             </Grid>
             <Grid item xs={12} align="center">
-                <AddForm_DvishenieMTR _open={_openEditDialog} dummy={dummy}/>
+                <AddForm_DvishenieMTR _open={_openDialog} _openSet={_openDialogSet} dummy={dummy}/>
+            </Grid>
+            <Grid item xs={12} align="center">
+                <EditForm_DvishenieMTR _open={_openEditDialog} _openSet={_openEditDialogSet} dummy={dummy}/>
             </Grid>
         </Grid>
     )
