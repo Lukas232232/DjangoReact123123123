@@ -48,6 +48,8 @@
     "@reduxjs/toolkit": "^2.0.1",
     "@remix-run/router": "^1.13.0",
     "axios": "^1.6.2",
+    "devextreme": "^23.2.7-build-24140-0112",
+    "devextreme-react": "^23.2.7-build-24140-0112",
     "formik": "^2.4.5",
     "js-cookie": "^3.0.5",
     "material-react-table": "^2.11.2",
@@ -62,7 +64,8 @@
     "redux-thunk": "^3.1.0",
     "universal-cookie": "^7.0.2",
     "uuid": "^8.3.2",
-    "yup": "^1.4.0"
+    "yup": "^1.4.0",
+    "zustand": "^4.5.2"
   },
   "description": ""
 }

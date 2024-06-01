@@ -46,6 +46,8 @@ class Uchastok_all_serializer(serializers.ModelSerializer):
     def validate_count(self, value):
         if value <= 0:
             raise serializers.ValidationError("Необходимо ввести число больше 0")
+        if value >= 4000:
+            raise serializers.ValidationError("Необходимо ввести число меньше 4000")
         return value
 
     def validate(self, data):
@@ -60,5 +62,5 @@ class Uchastok_all_serializer(serializers.ModelSerializer):
         if type_dvisheniya == 'Приход':
             data['itog_count'] = current_count  # Пример обработки
         else:
-            data['itog_count'] = current_count * (-1)
+            data['itog_count'] = int(current_count) * (-1)
         return data

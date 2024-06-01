@@ -15,8 +15,6 @@ class DvishenieMTRadmin(admin.ModelAdmin):
     )
     list_per_page = 25
     #exclude = ('itog_count', )  # указывает какие поля не отображать
-
-
 admin.site.register(DvishenieMTR, DvishenieMTRadmin)
 
 
@@ -45,8 +43,6 @@ class SpravochnikOborudovaniyaAdmin(admin.ModelAdmin):
         "unique_magazin",
         "unique_metrologia",
     )
-
-
 admin.site.register(SpravochnikOborudovaniya, SpravochnikOborudovaniyaAdmin)
 
 
@@ -59,8 +55,6 @@ class IstochnikAdmin(admin.ModelAdmin):
     search_fields = ("name", )
     list_per_page = 25
     fields = ('name', )
-
-
 admin.site.register(Istochnik, IstochnikAdmin)
 
 
@@ -73,8 +67,6 @@ class SkladAdmin(admin.ModelAdmin):
     search_fields = ("name", )
     list_per_page = 25
     fields = ('name', )
-
-
 admin.site.register(Sklad, SkladAdmin)
 
 
@@ -87,6 +79,4 @@ class Type_rabotAdmin(admin.ModelAdmin):
     search_fields = ("name", )
     list_per_page = 25
     fields = ('name', )
-
-
 admin.site.register(Type_rabot, Type_rabotAdmin)

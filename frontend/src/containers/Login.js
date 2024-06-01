@@ -10,14 +10,11 @@ import {
     Typography,
 } from "@mui/material";
 import { Link, Form, useNavigate } from "react-router-dom";
-import {login} from '../actions/auth'
+import {LoginSuccess} from '../hook/useReactQuery'
 
-import {useSelector} from "react-redux";
-import {useDispatch} from "react-redux";
 
 const Login = () => {
     const navigate = useNavigate()
-    const dispatch = useDispatch();
     const dataForm = useState({
         email: null,
         password: null,
@@ -26,10 +23,9 @@ const Login = () => {
     const loginFunc = async (e) =>{
         e.preventDefault();
         const {email, password} = e.target;
-        console.log(email.value, password.value);
-        const resp = await dispatch(login({email: email.value, password: password.value}))
-        if (resp.payload.access_token){
-            navigate("/new")
+        const resp = await LoginSuccess(email.value, password.value)
+        if (resp.access_token){
+            navigate(-1)
         }
     }
     

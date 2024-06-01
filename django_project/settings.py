@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'listings',
     'contacts',
     'sklad_uchastok',
+    'sklad_centeralniy',
 ]
 
 SESSION_COOKIE_AGE = 60 * 60 * 72  # время жизни сессии в секундах, здесь установлено на 3 дня

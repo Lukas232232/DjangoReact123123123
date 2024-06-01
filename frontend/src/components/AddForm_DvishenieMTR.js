@@ -43,7 +43,7 @@ const validationSchema = Yup.object({
 });
 
 
-export default function FormDialog({_open, dummy}) {
+export default function FormDialog({_open , _openSet, dummy}) {
     const navigate = useNavigate()
     const onSuccess = (data) => {
         console.log("Запрос выполенен")
@@ -54,8 +54,8 @@ export default function FormDialog({_open, dummy}) {
 
     const {mutate: addItemDvishMTR, isError, error, isLoading, isSuccess} = useCreateDvishMTR({onSuccess: onSuccess})
 
-
     const [disableIstochnik, setDisableIstochnik] = useState(false)
+    // кнопка для вызова формы добавления
     const onSubmit = (values, {setFieldError}) => {
         const newArr = {}
         Object.entries(values).forEach(([key, value], index) => {
@@ -75,7 +75,7 @@ export default function FormDialog({_open, dummy}) {
 
     // ЕСЛИ ВСЕ ХОРОШО И ПРИШЕЛ ПОЛОЖИТЕЛЬНЫЙ ОТВЕТ С СЕРВЕРА очищаем ФОРМУ
 
-    // вносим ошибки с сервера в поля для отоборбарженияы
+    // вносим ошибки с сервера в поля для отображения
     useEffect(() => {
         const errorServer = isError ? error.response.data.errors : null
         const newErrors = {}
@@ -103,7 +103,9 @@ export default function FormDialog({_open, dummy}) {
     // применяется для открытия и закрытия модального окна
     useEffect(() => {
         setOpen(_open)
-    }, [_open, dummy])
+        _openSet(_open)
+    }, [dummy])
+
 
     // Создаем списки для отобржаения все полей с автозаполнением
     useEffect(() => {
@@ -117,10 +119,13 @@ export default function FormDialog({_open, dummy}) {
     }, []);
     const handleClickOpen = () => {
         setOpen(true);
+        _openSet(true)
     };
     const handleClose = () => {
         setOpen(false);
+        _openSet(false)
     };
+
 
     const dialogWindow = css`
       max-width: 800px !important;

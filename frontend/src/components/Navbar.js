@@ -1,27 +1,16 @@
 /** @format */
 
-import React, { Component, useEffect, useState, useContext } from "react";
+import React, {useEffect, useState} from "react";
 
-import { useSelector, useDispatch } from "react-redux";
-import { login, signup, log_out, useAuth } from "../actions/auth";
+import {useDispatch, useSelector} from "react-redux";
+import {log_out} from "../actions/auth";
 
 import Cookies from "js-cookie";
-
-import { Link, Form } from "react-router-dom";
-import { styled, useTheme, createTheme, ThemeProvider } from "@mui/material/styles";
+import {styled, useTheme} from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
-import { InputBase } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
@@ -35,226 +24,234 @@ import CssBaseline from "@mui/material/CssBaseline";
 import MuiAppBar from "@mui/material/AppBar";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
-import LogoDevIcon from "@mui/icons-material/LogoDev";
 
-import { css } from "@emotion/react";
+import {css} from "@emotion/react";
 
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-
-import HomePage from "../containers/HomePage";
+import {useLocation, useNavigate} from "react-router-dom";
+import {useLeftMenu} from "../store/storeZustand";
 
 const drawerWidth = 240;
 
-const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(({ theme, open }) => ({
-	flexGrow: 1,
-	padding: theme.spacing(3),
-	transition: theme.transitions.create("margin", {
-		easing: theme.transitions.easing.sharp,
-		duration: theme.transitions.duration.leavingScreen,
-	}),
-	marginLeft: `-${drawerWidth}px`,
-	...(open && {
-		transition: theme.transitions.create("margin", {
-			easing: theme.transitions.easing.easeOut,
-			duration: theme.transitions.duration.enteringScreen,
-		}),
-		marginLeft: 0,
-	}),
+const Main = styled("main", {shouldForwardProp: (prop) => prop !== "open"})(({theme, open}) => ({
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create("margin", {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginLeft: `-${drawerWidth}px`,
+    ...(open && {
+        transition: theme.transitions.create("margin", {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+        marginLeft: 0,
+    }),
 }));
 
 const AppBar = styled(MuiAppBar, {
-	shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-	transition: theme.transitions.create(["margin", "width"], {
-		easing: theme.transitions.easing.sharp,
-		duration: theme.transitions.duration.leavingScreen,
-	}),
-	...(open && {
-		width: `calc(100% - ${drawerWidth}px)`,
-		marginLeft: `${drawerWidth}px`,
-		transition: theme.transitions.create(["margin", "width"], {
-			easing: theme.transitions.easing.easeOut,
-			duration: theme.transitions.duration.enteringScreen,
-		}),
-	}),
+    shouldForwardProp: (prop) => prop !== "open",
+})(({theme, open}) => ({
+    transition: theme.transitions.create(["margin", "width"], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+    }),
+    ...(open && {
+        width: `calc(100% - ${drawerWidth}px)`,
+        marginLeft: `${drawerWidth}px`,
+        transition: theme.transitions.create(["margin", "width"], {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    }),
 }));
 
-const DrawerHeader = styled("div")(({ theme }) => ({
-	display: "flex",
-	alignItems: "center",
-	padding: theme.spacing(0, 1),
-	// necessary for content to be below app bar
-	...theme.mixins.toolbar,
-	justifyContent: "flex-end",
+const DrawerHeader = styled("div")(({theme}) => ({
+    display: "flex",
+    alignItems: "center",
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+    justifyContent: "flex-end",
 }));
 
 const pages = [
-	{ name: "Home", path: "/new" },
-	{ name: "About", path: "/new/About" },
+    {name: "Home", path: "/new"},
+    {name: "About", path: "/new/About"},
 ];
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 // css темы для вертикального меню
 const vertMenu = css`
-	padding-left: 50px;
-	.Mui-selected {
-		background-color: #05c1fa;
-		font-size: 13px;
-		color: white !important;
-	}
-	.Mui-selected .MuiTab-root {
-		border-bottom: 2px solid red; // пример добавления стиля для нажатой кнопки
-	}
+    padding-left: 50px;
+
+    .Mui-selected {
+        background-color: #05c1fa;
+        font-size: 13px;
+        color: white !important;
+    }
+
+    .Mui-selected .MuiTab-root {
+        border-bottom: 2px solid red; // пример добавления стиля для нажатой кнопки
+    }
 `;
 
 const verMenuItem = css`
-	color: #fff;
-	font-size: 13px;
-	font-weight: 500;
-	
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+
 `;
 // Основаная функция компонента
 
 
 export default function Navbar(props) {
-	const cookieValue = Cookies.get("access_token");
-	console.log(cookieValue);
+    // настравиваем левое меню под zustand
+    const leftMenu = useLeftMenu((state) => (state.menu))
+    console.log(leftMenu)
+    // списки меню
+    const [menuItem, setMenuItem] = useState([
+        {label: 'Склад-Участковый', value: "/skladUchastok"},
+        {label: 'Склад-Центральный', value: "/centerSklad"},
+        {label: 'Склад-Метрологии', value: "/metrology"}
+    ])
+    const location = useLocation()
+    const cookieValue = Cookies.get("access_token");
+    const navigate = useNavigate()
+    // определяет содержится ли в адресе значения из menuItem делает кнопку нажатой
+    const [value, setValue] = useState(() => {
+        const fullURL = window.location.href;
+        console.log(fullURL)
+        const foundPart = menuItem.find(item => {
+            return fullURL.includes(item.value)
+        });
+        return foundPart ? foundPart.value : null
+    });
 
-	const [value, setValue] = useState("one");
+    const handleChange = (event, newValue) => {
+        setValue(newValue)
+        navigate(newValue)
+    };
+    // при каждой смене пути, будет определяться какую кнопку нажимать в навигации (подходит ли путь)
+    useEffect(() => {
+        setValue(location.pathname)
+    }, [location]);
 
-	const handleChange = (event, newValue) => {
-		setValue(newValue);
-	};
+    const alerts = useSelector((state) => state.alert.alert);
+    const login = useSelector((state) => state.auth.auth.token);
 
-	const alerts = useSelector((state) => state.alert.alert);
-	const login = useSelector((state) => state.auth.auth.token);
+    const theme = useTheme();
+    const [open, setOpen] = useState(false);
 
-	const theme = useTheme();
-	const [open, setOpen] = useState(false);
+    const handleDrawerOpen = () => {
+        setOpen(true);
+    };
 
-	const handleDrawerOpen = () => {
-		setOpen(true);
-	};
+    const handleDrawerClose = () => {
+        setOpen(false);
+    };
 
-	const handleDrawerClose = () => {
-		setOpen(false);
-	};
+    const dispatch = useDispatch();
+    const logoutFunc = (e) => {
+        dispatch(log_out());
+    };
 
-	const dispatch = useDispatch();
-	const logoutFunc = (e) => {
-		dispatch(log_out());
-	};
+    const [anchorElNav, setAnchorElNav] = useState(null);
+    const [anchorElUser, setAnchorElUser] = useState(null);
 
-	const [anchorElNav, setAnchorElNav] = useState(null);
-	const [anchorElUser, setAnchorElUser] = useState(null);
+    const handleOpenNavMenu = (event) => {
+        setAnchorElNav(event.currentTarget);
+    };
 
-	const handleOpenNavMenu = (event) => {
-		setAnchorElNav(event.currentTarget);
-	};
+    const handleOpenUserMenu = (event) => {
+        setAnchorElUser(event.currentTarget);
+    };
 
-	const handleOpenUserMenu = (event) => {
-		setAnchorElUser(event.currentTarget);
-	};
+    const handleCloseNavMenu = () => {
+        setAnchorElNav(null);
+    };
 
-	const handleCloseNavMenu = () => {
-		setAnchorElNav(null);
-	};
+    const handleCloseUserMenu = () => {
+        setAnchorElUser(null);
+    };
 
-	const handleCloseUserMenu = () => {
-		setAnchorElUser(null);
-	};
+    const logoutClick = () => {
+        console.log("logout");
+        dispatch(log_out());
+    };
 
-	const logoutClick = () => {
-		console.log("logout");
-		dispatch(log_out());
-	};
+    return (
+        <Box sx={{display: "flex"}}>
+            <CssBaseline/>
+            <AppBar position="fixed" open={open}>
+                <Toolbar>
+                    <IconButton
+                        color="inherit"
+                        aria-label="open drawer"
+                        onClick={handleDrawerOpen}
+                        edge="start"
+                        sx={{mr: 2, ...(open && {display: "none"})}}
+                    >
+                        <MenuIcon/>
+                    </IconButton>
+                    <Box sx={{width: "100%"}}>
+                        <Tabs
+                            css={vertMenu}
+                            value={value}
+                            onChange={handleChange}
+                            aria-label="wrapped label tabs example"
+                        >
+                            {menuItem.map(item => <Tab key={item.value} css={verMenuItem} value={item.value}
+                                                       label={item.label}/>)}
+                        </Tabs>
+                    </Box>
+                </Toolbar>
+            </AppBar>
+            <Drawer
+                sx={{
+                    width: drawerWidth,
+                    flexShrink: 0,
+                    "& .MuiDrawer-paper": {
+                        backgroundColor: "#f0f9ffd4",
+                        width: drawerWidth,
+                        boxSizing: "border-box",
+                    },
+                }}
+                variant="persistent"
+                anchor="left"
+                open={open}
+            >
 
-	return (
-		<Box sx={{ display: "flex" }}>
-			<CssBaseline />
-			<AppBar position="fixed" open={open}>
-				<Toolbar>
-					<IconButton
-						color="inherit"
-						aria-label="open drawer"
-						onClick={handleDrawerOpen}
-						edge="start"
-						sx={{ mr: 2, ...(open && { display: "none" }) }}
-					>
-						<MenuIcon />
-					</IconButton>
-					<Box sx={{ width: "100%" }}>
-						<Tabs
-							css={vertMenu}
-							value={value}
-							onChange={handleChange}
-							aria-label="wrapped label tabs example"
-						>
-							<Tab
-								css={verMenuItem}
-								value="one"
-								label="New Arrivals in the Longest Text of"
-								wrapped
-							/>
-							<Tab css={verMenuItem} value="two" label="Item Two" />
-							<Tab css={verMenuItem} value="three" label="Item Three" />
-						</Tabs>
-					</Box>
-				</Toolbar>
-			</AppBar>
-			<Drawer
-				sx={{
-					width: drawerWidth,
-					flexShrink: 0,
-					"& .MuiDrawer-paper": {
-						backgroundColor: "#f0f9ffd4",
-						width: drawerWidth,
-						boxSizing: "border-box",
-					},
-				}}
-				variant="persistent"
-				anchor="left"
-				open={open}
-			>
-				<DrawerHeader>
-					<h3 style={{paddingRight: "15px"}}>Меню</h3>
-					<IconButton onClick={handleDrawerClose}>
-						{theme.direction === "ltr" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-					</IconButton>
-				</DrawerHeader>
-				<Divider />
-				<h3 style={{paddingRight: "15px", textAlign:'center'}}>Склад</h3>
-				<Divider />
-				<List>
-					{["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-						<ListItem key={text} disablePadding>
-							<ListItemButton>
-								<ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-								<ListItemText primary={text} />
-							</ListItemButton>
-						</ListItem>
-					))}
-				</List>
-				<Divider />
-				<h3 style={{paddingRight: "15px", textAlign:'center'}}>Модулья закупок</h3>
-				<Divider />
-				<List>
-					{["All mail", "Trash", "Spam"].map((text, index) => (
-						<ListItem key={text} disablePadding>
-							<ListItemButton>
-								<ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-								<ListItemText primary={text} />
-							</ListItemButton>
-						</ListItem>
-					))}
-				</List>
-			</Drawer>
-			<Main open={open}>
-				<DrawerHeader />
-				{props.outletMy}
-			</Main>
-		</Box>
-	);
+                <IconButton onClick={handleDrawerClose}>
+                    {theme.direction === "ltr" ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
+                </IconButton>
+                {leftMenu.map((nameSklad, index) => {
+                    return (
+                        <React.Fragment key={index}>
+                            <h6 style={{paddingRight: "15px", textAlign: 'center'}}>{nameSklad.name}</h6>
+                            <List>
+                                {nameSklad.item.map((itm, index) => (
+                                    <ListItem key={itm.nameItem} disablePadding>
+                                        <ListItemButton>
+                                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}</ListItemIcon>
+                                            <ListItemText primary={itm.nameItem}/>
+                                        </ListItemButton>
+                                    </ListItem>
+                                ))}
+                            </List>
+                        </React.Fragment>)
+                })}
+                <Divider/>
+
+                <Divider/>
+            </Drawer>
+            <Main open={open}>
+                <DrawerHeader/>
+                {props.outletMy}
+            </Main>
+        </Box>
+    );
 }

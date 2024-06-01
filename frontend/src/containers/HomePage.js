@@ -11,6 +11,7 @@ import {AuthContext} from "../hoc/AuthProvider";
 import {css} from "@emotion/react";
 import DvishenieMTR from "../components/DvishenieMTR"
 import axios from "axios";
+import {authSlice} from "../store/storeZustand";
 
 
 export default function HomePage(props) {
@@ -73,8 +74,7 @@ async function getPosts({token}) {
 }
 
 export const getFetchAllLoader = async ({request, params}) => {
-    const state = store.getState();
-
+    const token = authSlice.getState().auth.token
     // if (!posts){
     // 	throw json(
     // 	  {
@@ -84,5 +84,5 @@ export const getFetchAllLoader = async ({request, params}) => {
     // 	  { status: 401 }
     // 	);
     // }
-    return defer({query: getPosts({token: state.auth.auth.token})});
+    return defer({query: getPosts({token: token})});
 };
