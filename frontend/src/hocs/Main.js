@@ -39,11 +39,6 @@ import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import CommentIcon from '@mui/icons-material/Comment';
 
-
-import {useSelector} from "react-redux";
-import {useDispatch} from "react-redux";
-import {addTodo, removeTodo, toggleTodo} from '../store/todoSlice'
-
 export default function Main() {
 	const [test, setTest] = useState("Тестовое состояние")
 	test_1 = test

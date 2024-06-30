@@ -11,20 +11,15 @@ import {
     Stack,
 } from "@mui/material";
 import { Link, Form } from "react-router-dom";
-import {login, signup} from '../actions/auth'
 
-import {useSelector} from "react-redux";
-import {useDispatch} from "react-redux";
 
 const SignUp = () => {
-    const dispatch = useDispatch()
-    
-    
+
     const sugnupFunc = (e) =>{
         e.preventDefault();
         const {name, email, password, password2} = e.target;
         console.log(name.value,email.value, password.value, password2.value);
-        dispatch(signup({email: email.value, password: password.value, password2: password2.value, name: name.value}))
+        ////////////////////////////// дописать метод авторизации
     }
     
     return (

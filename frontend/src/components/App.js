@@ -18,15 +18,12 @@ import SignUp from "../containers/SignUp";
 
 import ErrorPage from "./ErrorPage";
 
-import {Provider} from "react-redux";
-import store from '../store'
-
 import {AuthProvider} from '../hoc/AuthProvider'
 import {RequireAuth} from '../hoc/RequireAuth'
 import {QueryClient, QueryClientProvider} from "react-query";
 import CenterSklad from "./CenterSklad";
 // Импортируйте основные стили DevExtreme
-import 'devextreme/dist/css/dx.material.teal.light.css'; // Или другая тема по вашему выбору
+import 'devextreme/dist/css/dx.fluent.saas.light.css'; // Или другая тема по вашему выбору
 import 'devextreme/dist/css/dx.common.css';
 
 const queryClient = new QueryClient()
@@ -54,11 +51,9 @@ export default function App(props) {
     );
     return (
         <QueryClientProvider client={queryClient}>
-            <Provider store={store}>
                 <AuthProvider {...props}>
                     <RouterProvider router={router}/>
                 </AuthProvider>
-            </Provider>
         </QueryClientProvider>
     );
 }

@@ -38,7 +38,6 @@ class Uchastok_all_serializer(serializers.ModelSerializer):
     # type_rabot = Type_rabot_serialize()
     # user = UserAccount_serializer()
     # enc = SpravochnikOborudovaniya_serializer()
-
     class Meta:
         model = DvishenieMTR
         fields = '__all__'

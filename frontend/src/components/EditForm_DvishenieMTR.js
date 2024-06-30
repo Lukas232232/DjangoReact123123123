@@ -14,9 +14,12 @@ import {useAsyncValue, useNavigate, useSearchParams} from "react-router-dom";
 import * as Yup from 'yup'
 import {useFormik} from 'formik';
 import {useEditDvishMTR, useItemDvishMTR} from "../hook/useReactQuery";
-import {useQueryClient} from "react-query";
+import {useQueryClient, useMutation, QueryClient} from "react-query";
 
-export default function FormDialog({_open , _openSet, dummy}) {
+
+
+
+export default function FormDialog({_open, _openSet, dummy}) {
     // данные в get строке
     const [requestData, setRequestData] = useState(null);
     // октрывает сообщение об успешном изменении
@@ -128,7 +131,7 @@ export default function FormDialog({_open , _openSet, dummy}) {
         istochnik: [],
         type_rabot: [],
     })
-     // применяется для открытия и закрытия модального окна
+    // применяется для открытия и закрытия модального окна
     useEffect(() => {
         setOpen(_open)
         _openSet(_open)
@@ -169,8 +172,8 @@ export default function FormDialog({_open , _openSet, dummy}) {
         Object.entries(initialValues).forEach(([key, value], index) => {
             if (key in list) {
                 setinitialValues(prevState => ({
-                        ...prevState, [key]: list[key].find(item => (item.id === editData?.[key])) || ""
-                    }))
+                    ...prevState, [key]: list[key].find(item => (item.id === editData?.[key])) || ""
+                }))
             } else {
                 setinitialValues(prevState => ({...prevState, [key]: editData?.[key] || ""}))
             }

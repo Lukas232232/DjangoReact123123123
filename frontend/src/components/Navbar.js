@@ -2,9 +2,6 @@
 
 import React, {useEffect, useState} from "react";
 
-import {useDispatch, useSelector} from "react-redux";
-import {log_out} from "../actions/auth";
-
 import Cookies from "js-cookie";
 import {styled, useTheme} from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -77,9 +74,13 @@ const DrawerHeader = styled("div")(({theme}) => ({
     justifyContent: "flex-end",
 }));
 
-const pages = [
-    {name: "Home", path: "/new"},
-    {name: "About", path: "/new/About"},
+const leftMenu = [
+    {
+        name: "Склад_2",
+        item: [
+            {nameItem: "Menu-2", url: "/edit/rer/erer"},
+            {nameItem: "Menu-3", url: "/edit/rer/erer"}],
+    },
 ];
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -140,9 +141,6 @@ export default function Navbar(props) {
         setValue(location.pathname)
     }, [location]);
 
-    const alerts = useSelector((state) => state.alert.alert);
-    const login = useSelector((state) => state.auth.auth.token);
-
     const theme = useTheme();
     const [open, setOpen] = useState(false);
 
@@ -154,10 +152,6 @@ export default function Navbar(props) {
         setOpen(false);
     };
 
-    const dispatch = useDispatch();
-    const logoutFunc = (e) => {
-        dispatch(log_out());
-    };
 
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
@@ -176,11 +170,6 @@ export default function Navbar(props) {
 
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
-    };
-
-    const logoutClick = () => {
-        console.log("logout");
-        dispatch(log_out());
     };
 
     return (
@@ -226,7 +215,14 @@ export default function Navbar(props) {
             >
 
                 <IconButton onClick={handleDrawerClose}>
-                    {theme.direction === "ltr" ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
+                    {theme.direction === "ltr" ?
+                        <>
+                            <ChevronLeftIcon/>
+                            <ChevronLeftIcon/>
+                            <ChevronLeftIcon/>
+                        </> :
+                        <ChevronRightIcon/>
+                    }
                 </IconButton>
                 {leftMenu.map((nameSklad, index) => {
                     return (

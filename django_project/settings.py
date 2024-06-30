@@ -109,19 +109,19 @@ DATABASES = {
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME':
-        'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+            'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
         'NAME':
-        'django.contrib.auth.password_validation.MinimumLengthValidator',
+            'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
         'NAME':
-        'django.contrib.auth.password_validation.CommonPasswordValidator',
+            'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
         'NAME':
-        'django.contrib.auth.password_validation.NumericPasswordValidator',
+            'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 
@@ -152,76 +152,76 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-#minutes=15
+# minutes=15
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME":
-    timedelta(days=60),
+        timedelta(days=60),
     "REFRESH_TOKEN_LIFETIME":
-    timedelta(days=60),
+        timedelta(days=60),
     "ROTATE_REFRESH_TOKENS":
-    False,
+        False,
     "BLACKLIST_AFTER_ROTATION":
-    False,
+        False,
     "UPDATE_LAST_LOGIN":
-    False,
+        False,
     "ALGORITHM":
-    "HS256",
+        "HS256",
     "SIGNING_KEY":
-    SECRET_KEY,
+        SECRET_KEY,
     "VERIFYING_KEY":
-    "",
+        "",
     "AUDIENCE":
-    None,
+        None,
     "ISSUER":
-    None,
+        None,
     "JSON_ENCODER":
-    None,
+        None,
     "JWK_URL":
-    None,
+        None,
     "LEEWAY":
-    0,
+        0,
     "AUTH_HEADER_TYPES": ("Bearer", ""),
     "AUTH_HEADER_NAME":
-    "HTTP_AUTHORIZATION",
+        "HTTP_AUTHORIZATION",
     "USER_ID_FIELD":
-    "id",
+        "id",
     "USER_ID_CLAIM":
-    "user_id",
+        "user_id",
     "USER_AUTHENTICATION_RULE":
-    "rest_framework_simplejwt.authentication.default_user_authentication_rule",
-    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken", ),
+        "rest_framework_simplejwt.authentication.default_user_authentication_rule",
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
     "TOKEN_TYPE_CLAIM":
-    "token_type",
+        "token_type",
     "TOKEN_USER_CLASS":
-    "rest_framework_simplejwt.models.TokenUser",
+        "rest_framework_simplejwt.models.TokenUser",
     "JTI_CLAIM":
-    "jti",
+        "jti",
     "SLIDING_TOKEN_REFRESH_EXP_CLAIM":
-    "refresh_exp",
+        "refresh_exp",
     "SLIDING_TOKEN_LIFETIME":
-    timedelta(minutes=5),
+        timedelta(minutes=5),
     "SLIDING_TOKEN_REFRESH_LIFETIME":
-    timedelta(days=1),
+        timedelta(days=1),
     "TOKEN_OBTAIN_SERIALIZER":
-    "rest_framework_simplejwt.serializerr",
+        "rest_framework_simplejwt.serializerr",
     "TOKEN_REFRESH_SERIALIZEs.TokenObtainPairSerializeR":
-    "rest_framework_simplejwt.serializers.TokenRefreshSerializer",
+        "rest_framework_simplejwt.serializers.TokenRefreshSerializer",
     "TOKEN_VERIFY_SERIALIZER":
-    "rest_framework_simplejwt.serializers.TokenVerifySerializer",
+        "rest_framework_simplejwt.serializers.TokenVerifySerializer",
     "TOKEN_BLACKLIST_SERIALIZER":
-    "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
+        "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
     "SLIDING_TOKEN_OBTAIN_SERIALIZER":
-    "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
+        "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER":
-    "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
+        "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
 REST_FRAMEWORK = {
     # Использование аутентификации с помощью стандартного токена
     'DEFAULT_AUTHENTICATION_CLASSES':
-    ('rest_framework_simplejwt.authentication.JWTAuthentication', ),
+        ('rest_framework_simplejwt.authentication.JWTAuthentication',),
     # Установка стандартных разрешений для доступа к API
-    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny', ),
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
     # Конфигурация рендереров (какие типы контента может генерировать API)
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',

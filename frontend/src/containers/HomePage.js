@@ -3,7 +3,6 @@ import React, {Component, Suspense} from "react";
 import {Button, ButtonGroup, Grid,} from "@mui/material";
 import {Await, defer, Link, useLoaderData,} from "react-router-dom";
 
-import store from "../store";
 import {AuthContext} from "../hoc/AuthProvider";
 
 

@@ -21,6 +21,7 @@ admin.site.register(DvishenieMTR, DvishenieMTRadmin)
 class SpravochnikOborudovaniyaAdmin(admin.ModelAdmin):
     list_display = (
         'id',
+        'enc',
         'name',
         "unique_magazin",
         "unique_metrologia",
@@ -39,6 +40,7 @@ class SpravochnikOborudovaniyaAdmin(admin.ModelAdmin):
     )
     list_per_page = 25
     fields = (
+        "enc",
         'name',
         "unique_magazin",
         "unique_metrologia",

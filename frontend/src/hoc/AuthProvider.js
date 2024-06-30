@@ -16,10 +16,6 @@ import {
 	useRoutes,
 } from "react-router-dom";
 
-
-import {useSelector} from "react-redux";
-import {useDispatch} from "react-redux";
-
 import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
 
@@ -28,8 +24,7 @@ export const TestContext = createContext(null);
 
 export const AuthProvider = ({ children}) => {
 	const [test, setTest] = useState(null);
-	const [user, setUser] = useState(false);	
-	const dispatch = useDispatch()
+	const [user, setUser] = useState(false);
 	
 	const signin = async () => {
 	}

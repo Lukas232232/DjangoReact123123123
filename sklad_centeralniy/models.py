@@ -98,7 +98,7 @@ class DvishenieSkladMagaz(models.Model):
     )
 
     my_date = models.DateField(verbose_name="Дата")
-    date_vipuska = models.CharField(max_length=100, verbose_name="Дата выпуска")
+    date_vipuska = models.CharField(max_length=100, verbose_name="Дата выпуска", null=True, blank=True)
     enc = models.ForeignKey(SpravochnikOborudovaniya,
                             on_delete=models.DO_NOTHING,
                             verbose_name="ЕНС")
@@ -120,11 +120,11 @@ class DvishenieSkladMagaz(models.Model):
     type_postupleniya = models.ForeignKey(TypePostupleniya, on_delete=models.DO_NOTHING, verbose_name="Тип постулпения",
                                           blank=True, null=True)
     nomer_vhod_document = models.CharField(max_length=255, verbose_name="№ Входящего документа", blank=True, null=True)
-    date_vhod_document = models.CharField(max_length=255, verbose_name="Дата Входящего документа", blank=True,
+    date_vhod_document = models.DateField(verbose_name="Дата Входящего документа", blank=True,
                                           null=True)
     nomer_zakaza = models.ForeignKey(Naryd_zakaz, on_delete=models.DO_NOTHING, verbose_name="№ заказа", blank=True,
                                      null=True)
-    price_za_edinicy = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена за ед.")
+    price_za_edinicy = models.FloatField(default=0, verbose_name="Цена за ед.")
     serial_number = models.CharField(max_length=50, verbose_name="Серийный номер", blank=True, null=True)
     nomer_dogovora = models.ForeignKey(Dogovor, on_delete=models.CASCADE, blank=True, null=True, verbose_name="Договор")
 

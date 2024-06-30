@@ -28,15 +28,6 @@ import {
 import {CustomLink} from "../components/CustomLink";
 import Navbar from "../components/Navbar";
 import HomePage from "../containers/HomePage";
-
-import {useSelector} from "react-redux";
-import {useDispatch} from "react-redux";
-
-import {fetchAlert} from '../store/alertSlice'
-import {setAlerts} from '../actions/alert'
-
-import {login, signup, log_out, useAuth} from '../actions/auth'
-
 import Cookies from 'js-cookie';
 
 // Создаем новый объект для работы с куками

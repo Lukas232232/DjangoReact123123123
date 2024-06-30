@@ -66,7 +66,6 @@ class Uchastok_create_View(APIView):
         print(mutable_data)
         serializer = self.serializer_class(data=mutable_data)
         if serializer.is_valid():
-            pass
             data = serializer.save()
             serializer_new = self.serializer_class(data)
             return Response({'success': serializer_new.data}, status=201)

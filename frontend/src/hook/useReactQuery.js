@@ -1,11 +1,8 @@
 import React from 'react';
 import {useMutation, useQuery} from "react-query";
 import axios from "axios";
-import store from "../store";
 import {authSlice} from "../store/storeZustand";
 import Cookies from "js-cookie";
-import {login_success, logout, refreshToken} from "../store/authSlice";
-
 
 
 export const Logout = async () => {
@@ -114,17 +111,6 @@ const GetAllDvishMTR = () => {
     });
 }
 
-const GetAllSkladMagaz = () => {
-    const authSlice_ = authSlice.getState()
-    const token = authSlice_.auth.token
-    console.log(9999,token?.access_token)
-    return axios.get("/api/sklad_centeralniy/all", {
-        headers: {
-            "Authorization": `Bearer ${token?.access_token}`,
-        },
-    });
-}
-
 const EditDvishMTR = ({newArr, id}) => {
     const authSlice_ = authSlice.getState()
     const token = authSlice_.auth.token
@@ -154,14 +140,65 @@ const ItemDvishMTR = (id) => {
         }
     })
 }
+const GetAllSkladMagaz = () => {
+    const authSlice_ = authSlice.getState()
+    const token = authSlice_.auth.token
+    return axios.get("/api/sklad_centeralniy/all", {
+        headers: {
+            "Authorization": `Bearer ${token?.access_token}`,
+        },
+    });
+}
+const EditSkladMagaz = ({newData, id}) => {
+    const authSlice_ = authSlice.getState()
+    const token = authSlice_.auth.token
+    return axios.patch(`/api/sklad_centeralniy/edit/${id}`, newData, {
+        headers: {
+            'Authorization': `Bearer ${token?.access_token}`
+        }
+    })
+}
+
+const DeleteSkladMagaz = ({id}) => {
+    const authSlice_ = authSlice.getState()
+    const token = authSlice_.auth.token
+    return axios.delete(`/api/sklad_centeralniy/delete/${id}`, {
+        headers: {
+            'Authorization': `Bearer ${token?.access_token}`
+        }
+    })
+}
+const InsertSkladMagaz = (data) => {
+    const authSlice_ = authSlice.getState()
+    const token = authSlice_.auth.token
+    return axios.post(`/api/sklad_centeralniy/insert`, data, {
+        headers: {
+            'Authorization': `Bearer ${token?.access_token}`
+        }
+    })
+}
+
+
+// Методы мутаций
+export function useAllSkladMagaz(props) {
+    return useQuery(['getAllSkladMagaz'], () => GetAllSkladMagaz(), props)
+}
+
+export function useEditSkladMagaz(props) {
+    return useMutation(EditSkladMagaz, props)
+}
+
+export function useDeleteSkladMagaz(props) {
+    return useMutation(DeleteSkladMagaz, props)
+}
+
+export function useInsertSkladMagaz(props) {
+    return useMutation(InsertSkladMagaz, props)
+}
 
 
 export function useAllDvishMTR(props) {
     return useQuery(['getAllDvishMTR'], () => GetAllDvishMTR(), props)
-}
-
-export function useAllSkladMagaz(props) {
-    return useQuery(['пetAllSkladMagaz'], () => GetAllSkladMagaz(), props)
 }
 
 export function useItemDvishMTR({id, ...props}) {

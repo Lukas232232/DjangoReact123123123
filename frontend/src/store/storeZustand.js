@@ -53,7 +53,7 @@ export const useLeftMenu = create(devtools(persist((set, get) => ({
     ],
     setMenu: (menu) => {
         // set({ todos: [...get().todos, newTodo] })
-        set(store => ({menu: [...menu]}))
+        set(store => ({menu: [...store.menu,...menu]}))
     },
     toggleMenu: (todoId) => set({
         todos: get().todos.map(

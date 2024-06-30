@@ -1,3 +1,4 @@
+from django.db.models import F
 from django.shortcuts import render
 from rest_framework import permissions
 # from datetime import datetime, timezone, timedelta
@@ -20,8 +21,11 @@ class Centeraln_all_View(APIView):
                     status=404)
             SkladMtr = Sklad_all_serializer(SkladMtr, many=True)
         else:
-            SkladMtr = DvishenieSkladMagaz.objects.all()
-            SkladMtr = Sklad_all_serializer(SkladMtr, many=True)
+            SkladMtr = DvishenieSkladMagaz.objects.select_related('enc').annotate(
+                enc_name=F('enc__name'),
+                enc_enc=F('enc__enc')
+            )
+        SkladMtr = Sklad_all_serializer(SkladMtr, many=True)
 
         verbose_name = self.addVerboseName(DvishenieSkladMagaz)
 
@@ -40,7 +44,7 @@ class Centeraln_all_View(APIView):
         nomer_dogovora = Dogovor.objects.all()
         nomer_dogovora = Dogovor_serialize(nomer_dogovora, many=True)
 
-        user = UserAccount.objects.filter(pk=request.user.id)
+        user = UserAccount.objects.all()
         user = UserAccount_serializer(user, many=True)
 
         spravochnikOborudovanya = SpravochnikOborudovaniya.objects.all()
@@ -57,6 +61,41 @@ class Centeraln_all_View(APIView):
                 "verbose_name": verbose_name,
             },
             status=200)
+
+    def post(self, request):
+        request.data['user'] = request.user.id  # Теперь мы можем добавить/изменить данные
+        print(request.data)
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            data = serializer.save()
+            serializer_new = self.serializer_class(data)
+            return Response({'success': serializer_new.data}, status=201)
+        else:
+            # ошибки сериализации передаем в ответ
+            return Response({"errors": serializer.errors}, status=400)
+        return Response({"ok": "ok"})
+
+    def patch(self, request, pk):
+        item = DvishenieSkladMagaz.objects.filter(pk=pk).first()
+        print(request.data)
+        if item:
+            serializer = self.serializer_class(item, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=203)
+            else:
+                print(serializer.errors)
+                return Response({"errors": serializer.errors}, status=400)
+        else:
+            return Response({"error": "Указанного pk не существует"}, status=404)
+
+    def delete(self, request, pk):
+        item = DvishenieSkladMagaz.objects.filter(pk=pk).first()
+        if item:
+            item.delete()
+            return Response({"message": "Запись успешно удалена"}, status=200)
+        else:
+            return Response({"error": "Указанного pk не существует"}, status=404)
 
     def addVerboseName(self, model):
         # Добавляем поле Verbose_name как словарь где ключ это имя поля
