@@ -1,8 +1,12 @@
 from django.contrib import admin
+from django.forms import model_to_dict
 
 # Register your models here.
 # Register your models here.
 from .models import *
+from django.core.exceptions import ValidationError
+
+from .serializers import Sklad_all_serializer
 
 
 #
@@ -38,6 +42,7 @@ class DvishenieSkladMagazAdmin(admin.ModelAdmin):
         "price_za_edinicy",
         "serial_number",
         "nomer_dogovora",
+        'user'
     )
     list_display_links = (
         'id',
@@ -66,8 +71,6 @@ class DvishenieSkladMagazAdmin(admin.ModelAdmin):
         "serial_number",
         "nomer_dogovora",
     )
-
-
 admin.site.register(DvishenieSkladMagaz, DvishenieSkladMagazAdmin)
 
 

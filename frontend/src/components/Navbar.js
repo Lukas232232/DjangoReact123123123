@@ -5,6 +5,7 @@ import React, {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 import {styled, useTheme} from "@mui/material/styles";
 import Box from "@mui/material/Box";
+import DevBox, {Item as BoxItem} from 'devextreme-react/box';
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -22,12 +23,17 @@ import MuiAppBar from "@mui/material/AppBar";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 
+import {Menu} from 'devextreme-react/menu';
+import CustomeMenuAuth from './MenuAuth';
+
+
 import {css} from "@emotion/react";
 
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import {useLocation, useNavigate} from "react-router-dom";
 import {useLeftMenu} from "../store/storeZustand";
+import {Item} from "devextreme-react/form";
 
 const drawerWidth = 240;
 
@@ -104,10 +110,17 @@ const verMenuItem = css`
     color: #fff;
     font-size: 13px;
     font-weight: 500;
-
 `;
-// Основаная функция компонента
-
+// Меню авторизации
+const linkAuth = [
+    {
+        name: 'Пользователь',
+        items: [
+            {name: 'Профиль', path: '/product1/subproduct1'},
+            {name: 'Выход', path: '/Logout'},
+        ],
+    },
+];
 
 export default function Navbar(props) {
     // настравиваем левое меню под zustand
@@ -197,6 +210,19 @@ export default function Navbar(props) {
                                                        label={item.label}/>)}
                         </Tabs>
                     </Box>
+                    {/*Меню авторизации*/}
+                    <div style={{marginRight: "100px"}}>
+                        <Menu
+                            dataSource={linkAuth}
+                            displayExpr="name"
+                            showFirstSubmenuMode={{name: 'click'}}
+                            orientation={'horizontal'}
+                            hideSubmenuOnMouseLeave={false}
+                            //onItemClick={itemClick}
+                            itemRender={(item) => <CustomeMenuAuth data={item}/>}
+
+                        />
+                    </div>
                 </Toolbar>
             </AppBar>
             <Drawer
@@ -213,7 +239,6 @@ export default function Navbar(props) {
                 anchor="left"
                 open={open}
             >
-
                 <IconButton onClick={handleDrawerClose}>
                     {theme.direction === "ltr" ?
                         <>
@@ -227,7 +252,9 @@ export default function Navbar(props) {
                 {leftMenu.map((nameSklad, index) => {
                     return (
                         <React.Fragment key={index}>
-                            <h6 style={{paddingRight: "15px", textAlign: 'center'}}>{nameSklad.name}</h6>
+                            <Divider/>
+                            <Divider/>
+                            <h6 style={{paddingRight: "15px", paddingTop:"15px", textAlign: 'center'}}>{nameSklad.name}</h6>
                             <List>
                                 {nameSklad.item.map((itm, index) => (
                                     <ListItem key={itm.nameItem} disablePadding>
@@ -241,7 +268,6 @@ export default function Navbar(props) {
                         </React.Fragment>)
                 })}
                 <Divider/>
-
                 <Divider/>
             </Drawer>
             <Main open={open}>

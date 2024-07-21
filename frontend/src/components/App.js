@@ -23,8 +23,9 @@ import {RequireAuth} from '../hoc/RequireAuth'
 import {QueryClient, QueryClientProvider} from "react-query";
 import CenterSklad from "./CenterSklad";
 // Импортируйте основные стили DevExtreme
-import 'devextreme/dist/css/dx.fluent.saas.light.css'; // Или другая тема по вашему выбору
+import 'devextreme/dist/css/dx.material.blue.light.compact.css'; // Или другая тема по вашему выбору
 import 'devextreme/dist/css/dx.common.css';
+import DvishenieMTR from "./DvishenieMTR";
 
 const queryClient = new QueryClient()
 
@@ -36,24 +37,26 @@ export default function App(props) {
                     <Route index element={<HomePage {...props} testNew="дадада"/>}
                            loader={getFetchAllLoader} errorElement={<ErrorPage/>}/>
                     <Route path='/skladUchastok' element={<RequireAuth {...props}>
-                        <HomePage {...props} testNew="дадада"/></RequireAuth>}
+                        <DvishenieMTR {...props}/></RequireAuth>}
                            loader={getFetchAllLoader} errorElement={<ErrorPage/>}/>
+                    <Route path='/centerSklad' element={<RequireAuth {...props}>
+                        <CenterSklad {...props}/></RequireAuth>}/>
                     <Route path='/About' element={<RequireAuth {...props}><About/></RequireAuth>}/>
                     <Route path='/Contact' element={<Contact/>}/>
                     <Route path='/ListingDetail' element={<ListingDetail/>}/>
                     <Route path='/Listings' element={<Listings/>}/>
-                    <Route path='/Login' element={<Login/>}/>
+
                     <Route path='/SignUp' element={<SignUp/>}/>
-                    <Route path='/centerSklad' element={<CenterSklad/>}/>
                 </Route>
+                <Route path='/Login' element={<Login/>}/>
             </>
         ),
     );
     return (
         <QueryClientProvider client={queryClient}>
-                <AuthProvider {...props}>
-                    <RouterProvider router={router}/>
-                </AuthProvider>
+            <AuthProvider {...props}>
+                <RouterProvider router={router}/>
+            </AuthProvider>
         </QueryClientProvider>
     );
 }

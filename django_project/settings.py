@@ -51,7 +51,13 @@ INSTALLED_APPS = [
     'contacts',
     'sklad_uchastok',
     'sklad_centeralniy',
+    'guardian',
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',  # this is default
+    'guardian.backends.ObjectPermissionBackend',
+)
 
 SESSION_COOKIE_AGE = 60 * 60 * 72  # время жизни сессии в секундах, здесь установлено на 3 дня
 

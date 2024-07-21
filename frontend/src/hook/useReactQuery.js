@@ -8,7 +8,7 @@ import Cookies from "js-cookie";
 export const Logout = async () => {
     const authSlice_ = authSlice.getState()
     try {
-        authSlice_.auth.logout()
+        authSlice_.logout()
         console.log("Logout выполнен")
         return {
             test: "test",

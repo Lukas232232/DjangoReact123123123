@@ -14,7 +14,7 @@ const RequireAuth = ({children}) => {
             try {
                 await AuthProtected();
             } catch (error) {
-                console.error(error.message);
+                throw Error(error.message)
             }
         };
         checkToken();

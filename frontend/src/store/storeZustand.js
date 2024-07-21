@@ -49,6 +49,14 @@ export const useLeftMenu = create(devtools(persist((set, get) => ({
             item: [
                 {nameItem: "Menu-1", url: "/edit/rer/erer"},
                 {nameItem: "Menu-2", url: "/edit/rer/erer"}],
+
+        },
+        {
+            name: "Склад-2",
+            item: [
+                {nameItem: "Menu-1", url: "/edit/rer/erer"},
+                {nameItem: "Menu-2", url: "/edit/rer/erer"}],
+
         }
     ],
     setMenu: (menu) => {

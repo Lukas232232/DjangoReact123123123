@@ -61,33 +61,44 @@ class Sklad_all_serializer(serializers.ModelSerializer):
         model = DvishenieSkladMagaz
         fields = '__all__'
 
-    def validate_count(self, value):
-        print(123)
-        errors = []
+    # def validate_count(self, value):
+    #     errors = []
+    #     if value == 11111:
+    #         errors.append("Необходимо ввести число больше 0")
+    #     if value <= 0:
+    #         errors.append("Необходимо ввести число больше 0")
+    #     if value > 4000:
+    #         errors.append("Необходимо ввести число меньше 4000")
+    #     if errors:
+    #         raise serializers.ValidationError(errors)
+    #     return value
 
-        if value <= 0:
-            errors.append("Необходимо ввести число больше 0")
-
-        if value > 4000:
-            errors.append("Необходимо ввести число меньше 4000")
-
-        if errors:
-            raise serializers.ValidationError(errors)
-        return value
+    # def validate(self, data):
+    #     # обрабатываем данные для поля ITOG_COUNT
+    #     type_dvisheniya = data.get('type_dvisheniya')
+    #     current_count = data.get('count')
+    #     # Допустим, у вас есть доступ к self.instance для получения текущего значения itog_count
+    #     # Если создается новая запись, self.instance будет None
+    #     # current_itog_count = self.instance.itog_count if self.instance else None
+    #
+    #     # Теперь вы можете выполнить проверку или обработку
+    #     if type_dvisheniya and current_count:
+    #         if type_dvisheniya == 'Приход':
+    #             data['itog_count'] = current_count  # Пример обработки
+    #         else:
+    #             data['itog_count'] = int(current_count) * (-1)
+    #     return data
 
     def validate(self, data):
-        print(data)
-        # обрабатываем данные для поля ITOG_COUNT
-        type_dvisheniya = data.get('type_dvisheniya')
-        current_count = data.get('count')
-        # Допустим, у вас есть доступ к self.instance для получения текущего значения itog_count
-        # Если создается новая запись, self.instance будет None
-        # current_itog_count = self.instance.itog_count if self.instance else None
+        # Создаем временный объект модели для валидации
+        instance = DvishenieSkladMagaz(**data)
 
-        # Теперь вы можете выполнить проверку или обработку
-        if type_dvisheniya and current_count:
-            if type_dvisheniya == 'Приход':
-                data['itog_count'] = current_count  # Пример обработки
-            else:
-                data['itog_count'] = int(current_count) * (-1)
+        # Вызываем метод full_clean модели для валидации
+        try:
+            instance.full_clean()
+        except ValidationError as e:
+            # Преобразуем ValidationError в неполадки сериализатора
+            raise serializers.ValidationError(e.message_dict)
+
         return data
+

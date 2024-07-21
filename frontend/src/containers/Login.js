@@ -9,12 +9,13 @@ import {
     Grid,
     Typography,
 } from "@mui/material";
-import { Link, Form, useNavigate } from "react-router-dom";
+import { Link, Form, useNavigate, useNavigation } from "react-router-dom";
 import {LoginSuccess} from '../hook/useReactQuery'
 
 
 const Login = () => {
     const navigate = useNavigate()
+    const navigation = useNavigation()
     const dataForm = useState({
         email: null,
         password: null,
@@ -25,7 +26,8 @@ const Login = () => {
         const {email, password} = e.target;
         const resp = await LoginSuccess(email.value, password.value)
         if (resp.access_token){
-            navigate(-1)
+            console.log(navigation)
+            navigate("/")
         }
     }
     

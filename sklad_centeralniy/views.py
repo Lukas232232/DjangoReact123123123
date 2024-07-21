@@ -8,9 +8,20 @@ from .serializers import *
 from sklad_uchastok.models import SpravochnikOborudovaniya, Sklad
 
 
+class MyModelPermission(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.method.lower() == "get" and request.user.has_perm('sklad_centeralniy.list_DvishenieSkladMagaz'):
+            return True
+        return True
+
+    def has_object_permission(self, request, view, obj):
+        print(2)
+        return True
+
+
 class Centeraln_all_View(APIView):
     serializer_class = Sklad_all_serializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated, MyModelPermission)
 
     def get(self, request, pk=None):
         if pk:
@@ -26,7 +37,8 @@ class Centeraln_all_View(APIView):
                 enc_enc=F('enc__enc')
             )
         SkladMtr = Sklad_all_serializer(SkladMtr, many=True)
-
+        # проверка на уровне объекта
+        self.check_object_permissions(request, SkladMtr)
         verbose_name = self.addVerboseName(DvishenieSkladMagaz)
 
         rudnik = Sklad.objects.all()
@@ -64,7 +76,6 @@ class Centeraln_all_View(APIView):
 
     def post(self, request):
         request.data['user'] = request.user.id  # Теперь мы можем добавить/изменить данные
-        print(request.data)
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             data = serializer.save()
@@ -77,14 +88,12 @@ class Centeraln_all_View(APIView):
 
     def patch(self, request, pk):
         item = DvishenieSkladMagaz.objects.filter(pk=pk).first()
-        print(request.data)
         if item:
             serializer = self.serializer_class(item, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=203)
             else:
-                print(serializer.errors)
                 return Response({"errors": serializer.errors}, status=400)
         else:
             return Response({"error": "Указанного pk не существует"}, status=404)

@@ -2,7 +2,7 @@ from django.db import models
 
 from accounts.models import UserAccount
 from sklad_uchastok.models import SpravochnikOborudovaniya, Sklad
-
+from django.core.exceptions import ValidationError
 
 class TypePostupleniya(models.Model):
     name = models.CharField(max_length=255)
@@ -103,7 +103,7 @@ class DvishenieSkladMagaz(models.Model):
                             on_delete=models.DO_NOTHING,
                             verbose_name="ЕНС")
     count = models.IntegerField(default=0, verbose_name="Количество")
-    comment = models.TextField(blank=True, null=True, verbose_name="Комментарий")
+    comment = models.TextField( verbose_name="Комментарий")
     user = models.ForeignKey(UserAccount,
                              null=True, blank=True,
                              on_delete=models.DO_NOTHING,
@@ -113,7 +113,7 @@ class DvishenieSkladMagaz(models.Model):
                                        verbose_name="Тип движения")
     peredano = models.ForeignKey(Sklad,
                                  on_delete=models.DO_NOTHING,
-                                 verbose_name="Рудник/Склад")
+                                 verbose_name="Рудник/Склад", null=True, blank=True)
     itog_count = models.IntegerField(null=True,
                                      blank=True,
                                      verbose_name="Вычисляемое количество")
@@ -124,9 +124,61 @@ class DvishenieSkladMagaz(models.Model):
                                           null=True)
     nomer_zakaza = models.ForeignKey(Naryd_zakaz, on_delete=models.DO_NOTHING, verbose_name="№ заказа", blank=True,
                                      null=True)
-    price_za_edinicy = models.FloatField(default=0, verbose_name="Цена за ед.")
+    price_za_edinicy = models.FloatField(default=0, verbose_name="Цена за ед.", null=True, blank=True)
     serial_number = models.CharField(max_length=50, verbose_name="Серийный номер", blank=True, null=True)
     nomer_dogovora = models.ForeignKey(Dogovor, on_delete=models.CASCADE, blank=True, null=True, verbose_name="Договор")
+
+    class Meta:
+        permissions = [
+            ('getPar_DvishenieSkladMagaz', 'Запись просматривать DvishenieSkladMagaz'),
+            ('edit_DvishenieSkladMagaz', 'Изменять DvishenieSkladMagaz'),
+            ('delete_DvishenieSkladMagaz', 'Удалять DvishenieSkladMagaz'),
+            ('list_DvishenieSkladMagaz', 'Список DvishenieSkladMagaz'),
+            ('add_DvishenieSkladMagaz', 'Добавлять DvishenieSkladMagaz'),
+        ]
+
+    def clean_count(self):
+        errors_arr = []
+        if self.count == 11111:
+            errors_arr.append("Необходимо ввести другое число")
+        if self.count <= 0:
+            errors_arr.append("Необходимо ввести число больше 0")
+        if self.count > 4000:
+            errors_arr.append("Необходимо ввести число меньше 4000")
+        if errors_arr:
+            errors = {'count': errors_arr}
+            return errors
+        else:
+            return {}
+
+    def clean_type_dvisheniya(self):
+        # обрабатываем данные для поля ITOG_COUNT
+        type_dvisheniya = self.type_dvisheniya
+        current_count = self.count
+        # Допустим, у вас есть доступ к self.instance для получения текущего значения itog_count
+        # Если создается новая запись, self.instance будет None
+        # current_itog_count = self.instance.itog_count if self.instance else None
+
+        # Теперь вы можете выполнить проверку или обработку
+        if type_dvisheniya and current_count:
+            if type_dvisheniya == 'Приход':
+                self.count = current_count  # Пример обработки
+            else:
+                self.itog_count = int(current_count) * (-1)
+        return {}
+
+    def clean(self):
+        errors = {}
+        errors.update(self.clean_count())
+        errors.update(self.clean_type_dvisheniya())
+        if errors:
+            raise ValidationError(errors)
+        super().clean()
+
+    def save(self, *args, **kwargs):
+        # Выполняем валидацию модели перед сохранением
+        self.full_clean()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.enc.name
